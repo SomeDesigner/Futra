@@ -1,0 +1,91 @@
+@use "../utilities/css-variables" as cv;
+@use "../utilities/default-variables" as dv;
+@use "../utilities/extends";
+@use "../utilities/mixins" as mx;
+
+$bar-item-spacing: calc(#{cv.getVar("block-spacing")} * 0.5) !default;
+
+.#{dv.$class-prefix}bar {
+  @extend %block;
+  @include cv.register-var("bar-item-spacing", $bar-item-spacing);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: cv.getVar("bar-item-spacing");
+
+  code {
+    border-radius: cv.getVar("radius");
+  }
+
+  img {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  &.#{dv.$class-prefix}is-mobile {
+    flex-direction: row;
+
+    .#{dv.$class-prefix}bar-left,
+    .#{dv.$class-prefix}bar-right {
+      display: flex;
+    }
+
+    .#{dv.$class-prefix}bar-item:not(.#{dv.$class-prefix}is-narrow) {
+      flex-grow: 1;
+    }
+  }
+
+  @include mx.responsive("from", "768px") {
+    flex-direction: row;
+
+    & > .#{dv.$class-prefix}bar-item:not(.#{dv.$class-prefix}is-narrow) {
+      flex-grow: 1;
+    }
+  }
+}
+
+.#{dv.$class-prefix}bar-item {
+  @extend %block;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+
+  .#{dv.$class-prefix}title,
+  .#{dv.$class-prefix}subtitle {
+    margin-bottom: 0;
+  }
+}
+
+.#{dv.$class-prefix}bar-left,
+.#{dv.$class-prefix}bar-right {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: $bar-item-spacing;
+
+  .#{dv.$class-prefix}bar-item.#{dv.$class-prefix}is-flexible {
+    flex-grow: 1;
+  }
+}
+
+.#{dv.$class-prefix}bar-left {
+  flex-direction: column;
+  justify-content: flex-start;
+
+  @include mx.responsive("from", "768px") {
+    flex-direction: row;
+  }
+}
+
+.#{dv.$class-prefix}bar-right {
+  flex-direction: column;
+  justify-content: flex-end;
+
+  @include mx.responsive("from", "768px") {
+    flex-direction: row;
+  }
+}

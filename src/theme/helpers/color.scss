@@ -1,0 +1,155 @@
+@use "../utilities/css-variables" as cv;
+@use "../utilities/root-variables" as rv;
+@use "../utilities/default-variables" as iv;
+
+// Define digits as a list
+$digits: "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100";
+
+// Base classes for color helpers
+@mixin color-helper-classes($name, $type) {
+  $base-hsl: (
+    "h": #{cv.getVar($name, "", "-h")},
+    "s": #{cv.getVar($name, "", "-s")},
+    "l": #{cv.getVar($name, "", "-l")}
+  );
+
+  // Generate standard colors
+  .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name} {
+    #{$type}-color: hsl(map.get($base-hsl, "h"), map.get($base-hsl, "s"), map.get($base-hsl, "l")) !important;
+  }
+
+  // Generate inverted colors
+  .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name}-invert {
+    #{$type}-color: hsl(map.get($base-hsl, "h"), map.get($base-hsl, "s"), #{cv.getVar($name, "", "-invert-l")}) !important;
+  }
+
+  // Generate on-scheme colors
+  .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name}-on-scheme {
+    #{$type}-color: hsl(map.get($base-hsl, "h"), map.get($base-hsl, "s"), #{cv.getVar($name, "", "-on-scheme-l")}) !important;
+  }
+
+  // Generate light and dark variations
+  @each $variation in ("light", "dark", "soft", "bold") {
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name}-#{$variation} {
+      #{$type}-color: hsl(
+        map.get($base-hsl, "h"),
+        map.get($base-hsl, "s"),
+        #{cv.getVar($name, "", "-#{$variation}-l")}
+      ) !important;
+    }
+
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name}-#{$variation}-invert {
+      #{$type}-color: hsl(
+        map.get($base-hsl, "h"),
+        map.get($base-hsl, "s"),
+        #{cv.getVar($name, "", "-#{$variation}-invert-l")}
+      ) !important;
+    }
+  }
+}
+
+// Generate hover and active states
+@mixin interactive-color-classes($name, $type) {
+  $base-hsl: (
+    "h": #{cv.getVar($name, "", "-h")},
+    "s": #{cv.getVar($name, "", "-s")},
+    "l": #{cv.getVar($name, "", "-l")}
+  );
+
+  .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name}.is-hoverable {
+    &:hover,
+    &:focus-visible {
+      #{$type}-color: hsl(
+        map.get($base-hsl, "h"),
+        map.get($base-hsl, "s"),
+        calc(map.get($base-hsl, "l") + #{cv.getVar("hover-color-l-delta")})
+      ) !important;
+    }
+
+    &:active {
+      #{$type}-color: hsl(
+        map.get($base-hsl, "h"),
+        map.get($base-hsl, "s"),
+        calc(map.get($base-hsl, "l") + #{cv.getVar("active-color-l-delta")})
+      ) !important;
+    }
+  }
+}
+
+// Generate color classes for all digits
+@mixin digit-color-classes($name, $type) {
+  @each $digit in $digits {
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name}-#{$digit} {
+      #{$type}-color: hsl(
+        #{cv.getVar($name, "", "-h")},
+        #{cv.getVar($name, "", "-s")},
+        #{cv.getVar($name, "", "-#{$digit}-l")}
+      ) !important;
+    }
+
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name}-#{$digit}-invert {
+      #{$type}-color: hsl(
+        #{cv.getVar($name, "", "-h")},
+        #{cv.getVar($name, "", "-s")},
+        #{cv.getVar($name, "", "-#{$digit}-invert-l")}
+      ) !important;
+    }
+  }
+}
+
+// Generate palette variables
+@mixin generate-palette($name) {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}palette-#{$name} {
+    --h: #{cv.getVar($name, "", "-h")};
+    --s: #{cv.getVar($name, "", "-s")};
+    --l: #{cv.getVar($name, "", "-l")};
+    --color: hsl(var(--h), var(--s), var(--l));
+
+    @each $digit in $digits {
+      --#{$digit}-l: #{cv.getVar($name, "", "-#{$digit}-l")};
+      --color-#{$digit}: hsl(var(--h), var(--s), var(--#{$digit}-l));
+    }
+  }
+}
+
+// Generate all color helpers for a given name
+@mixin generate-color-helpers($name) {
+  @include color-helper-classes($name, "text");
+  @include color-helper-classes($name, "background");
+  @include interactive-color-classes($name, "text");
+  @include interactive-color-classes($name, "background");
+  @include digit-color-classes($name, "text");
+  @include digit-color-classes($name, "background");
+  @include generate-palette($name);
+}
+
+// Apply mixins for all colors and shades
+@each $name, $color in rv.$colors {
+  @include generate-color-helpers($name);
+}
+
+@each $name, $shade in rv.$shades {
+  .#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-#{$name} {
+    color: $shade !important;
+  }
+  .#{dv.$class-prefix}#{dv.$helpers-has-prefix}background-#{$name} {
+    background-color: $shade !important;
+  }
+}
+
+// Utility classes
+.#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-current {
+  color: currentColor !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-inherit {
+  color: inherit !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-has-prefix}background-current {
+  background-color: currentColor !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-has-prefix}background-inherit {
+  background-color: inherit !important;
+}

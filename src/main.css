@@ -1,0 +1,23 @@
+/* Error: $color: 100% is not a color.
+ *     ,
+ * 167 |         color.channel($n, "red", $space: rgb) * 299 +
+ *     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ *     '
+ *   src\theme\utilities\functions.scss 167:9      futraColorBrightness()
+ *   src\theme\utilities\css-variables.scss 98:28  generate-on-scheme-colors()
+ *   src\theme\utilities\css-variables.scss 93:3   generate-color-palette()
+ *   src\theme\themes\light.scss 122:7             light-theme()
+ *   src\theme\themes\_index.scss 11:3             @forward
+ *   src\theme\_index.scss 2:1                     @use
+ *   src\main.scss 1:1                             root stylesheet */
+
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
+      "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: 'Error: $color: 100% is not a color.\a     \2577 \a 167 \2502          color.channel($n, "red", $space: rgb) * 299 +\d\a     \2502          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\a     \2575 \a   src\\theme\\utilities\\functions.scss 167:9      futraColorBrightness()\a   src\\theme\\utilities\\css-variables.scss 98:28  generate-on-scheme-colors()\a   src\\theme\\utilities\\css-variables.scss 93:3   generate-color-palette()\a   src\\theme\\themes\\light.scss 122:7             light-theme()\a   src\\theme\\themes\\_index.scss 11:3             @forward\a   src\\theme\\_index.scss 2:1                     @use\a   src\\main.scss 1:1                             root stylesheet';
+}

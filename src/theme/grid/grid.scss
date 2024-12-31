@@ -1,0 +1,214 @@
+@use "../utilities/css-variables" as cv;
+@use "../utilities/default-variables" as dv;
+@use "../utilities/extends";
+@use "../utilities/mixins" as mx;
+
+// Fixed Grid Properties
+@mixin fixed-grid-properties($suffix: "") {
+  @for $i from 1 through $max-column-count {
+    &.#{dv.$class-prefix}has-#{$i}-cols#{$suffix} {
+      > .#{dv.$class-prefix}grid {
+        @include cv.register-var("grid-column-count", $i);
+      }
+    }
+  }
+}
+
+// Fixed Grid
+$grid-container-name: futra-fixed-grid;
+
+.#{dv.$class-prefix}fixed-grid {
+  @extend %block;
+  container-name: $grid-container-name;
+  container-type: inline-size;
+
+  > .#{dv.$class-prefix}grid {
+    @include cv.register-vars(
+      (
+        "grid-gap-count": calc(#{cv.getVar("grid-column-count")} - 1),
+        "grid-column-count": 2,
+      )
+    );
+
+    grid-template-columns: repeat(cv.getVar("grid-column-count"), 1fr);
+  }
+
+  @include fixed-grid-properties;
+
+  // Breakpoints
+  @each $suffix,
+    $breakpoint
+      in (
+        "-mobile": dv.$tablet,
+        "-tablet": dv.$tablet,
+        "-desktop": dv.$desktop,
+        "-widescreen": dv.$widescreen,
+        "-fullhd": dv.$fullhd
+      )
+  {
+    @include mx.container-from($grid-container-name, $breakpoint) {
+      @include fixed-grid-properties($suffix);
+    }
+  }
+
+  // Auto Count
+  &.#{dv.$class-prefix}has-auto-count {
+    .#{dv.$class-prefix}grid {
+      @each $breakpoint,
+        $columns
+          in (
+            dv.$tablet: 2,
+            dv.$tablet: 4,
+            dv.$desktop: 8,
+            dv.$widescreen: 12,
+            dv.$fullhd: 16
+          )
+      {
+        @include mx.container-from($grid-container-name, $breakpoint) {
+          @include cv.register-var("grid-column-count", $columns);
+        }
+      }
+    }
+  }
+}
+
+// Grid Base
+.#{dv.$class-prefix}grid {
+  @include cv.register-vars(
+    (
+      "grid-gap": $grip-gap,
+      "grid-column-min": 9rem,
+      "grid-cell-column-span": 1,
+      "grid-cell-row-span": 1,
+    )
+  );
+
+  @extend %block;
+  display: grid;
+  gap: cv.getVar("grid-gap");
+  column-gap: #{cv.getVarWithBackup("grid-column-gap", "grid-gap")};
+  row-gap: #{cv.getVarWithBackup("grid-row-gap", "grid-gap")};
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(#{cv.getVar("grid-column-min")}, 1fr)
+  );
+  grid-template-rows: auto;
+
+  &.is-auto-fill {
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(#{cv.getVar("grid-column-min")}, 1fr)
+    );
+  }
+
+  // Column Minimums
+  @for $i from 1 through 32 {
+    &.#{dv.$class-prefix}is-col-min-#{$i} {
+      @include cv.register-vars(
+        (
+          "grid-column-min": $column-min-base * $i,
+        )
+      );
+    }
+  }
+}
+
+// Cell Properties
+@mixin cell-properties($suffix: "") {
+  @for $i from 1 through $max-column-count {
+    $name: $i + $suffix;
+
+    @each $property,
+      $value
+        in (
+          "is-col-start-": "grid-cell-column-start",
+          "is-col-end-": "grid-cell-column-end",
+          "is-col-from-end-": "grid-cell-column-start",
+          "is-col-span-": "grid-cell-column-span",
+          "is-row-start-": "grid-cell-row-start",
+          "is-row-end-": "grid-cell-row-end",
+          "is-row-from-end-": "grid-cell-row-start",
+          "is-row-span-": "grid-cell-row-span"
+        )
+    {
+      &.#{dv.$class-prefix}#{$property}#{$name} {
+        @include cv.register-var(
+          $value,
+          if(
+            $property == "is-col-from-end-" or $property == "is-row-from-end-",
+            -$i,
+            $i
+          )
+        );
+      }
+    }
+  }
+}
+
+// Cell Base
+.#{dv.$class-prefix}cell {
+  grid-column-end: span cv.getVar("grid-cell-column-span");
+  grid-column-start: cv.getVar("grid-cell-column-start");
+  grid-row-end: span cv.getVar("grid-cell-row-span");
+  grid-row-start: cv.getVar("grid-cell-row-start");
+
+  &.#{dv.$class-prefix}is-col-start-end {
+    @include cv.register-var("grid-cell-column-start", -1);
+  }
+
+  &.#{dv.$class-prefix}is-row-start-end {
+    @include cv.register-var("grid-cell-row-start", -1);
+  }
+
+  @include cell-properties;
+
+  // Responsive Cell Properties
+  @each $suffix,
+    $breakpoint
+      in (
+        "-mobile": (
+          type: "until",
+          until: dv.$tablet,
+        ),
+        "-tablet": (
+          type: "from",
+          from: dv.$tablet,
+        ),
+        "-tablet-only": (
+          type: "between",
+          from: dv.$tablet,
+          until: dv.$desktop,
+        ),
+        "-desktop": (
+          type: "from",
+          from: dv.$desktop,
+        ),
+        "-desktop-only": (
+          type: "between",
+          from: dv.$desktop,
+          until: dv.$widescreen,
+        ),
+        "-widescreen": (
+          type: "from",
+          from: dv.$widescreen,
+        ),
+        "-widescreen-only": (
+          type: "between",
+          from: dv.$widescreen,
+          until: dv.$fullhd,
+        ),
+        "-fullhd": (
+          type: "from",
+          from: dv.$fullhd,
+        )
+      )
+  {
+    @include responsive(
+      map.get($breakpoint, "type"),
+      map.get($breakpoint, "from"),
+      map.get($breakpoint, "until")
+    ) {
+      @include cell-properties($suffix);
+    }
+  }
+}

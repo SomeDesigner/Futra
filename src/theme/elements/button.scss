@@ -1,0 +1,177 @@
+@use "sass:list";
+
+@use "../utilities/css-variables" as cv;
+@use "../utilities/root-variables" as rv;
+@use "../utilities/default-variables" as dv;
+@use "../utilities/extends";
+@use "../utilities/mixins" as mx;
+
+// === Variables ===
+$button-padding-vertical: 0.5em !default;
+$button-padding-horizontal: 1em !default;
+$button-rounded-padding-offset: 0.25em !default;
+
+$button-disabled-opacity: 0.5 !default;
+$button-disabled-shadow: none !default;
+
+$button-responsive-sizes: (
+  "mobile": (
+    "small": calc(#{cv.getVar("size-small")} * 0.75),
+    "normal": calc(#{cv.getVar("size-small")} * 0.875),
+    "medium": cv.getVar("size-small"),
+    "large": cv.getVar("size-normal"),
+  ),
+  "tablet-only": (
+    "small": calc(#{cv.getVar("size-small")} * 0.875),
+    "normal": cv.getVar("size-small"),
+    "medium": cv.getVar("size-normal"),
+    "large": cv.getVar("size-medium"),
+  ),
+) !default;
+
+// === Base Button Styles ===
+.#{dv.$class-prefix}button {
+  @extend %control;
+  @extend %unselectable;
+
+  // Base styles
+  background-color: hsl(
+    #{cv.getVar("button-h")},
+    #{cv.getVar("button-s")},
+    #{cv.getVar("button-l")}
+  );
+  border: cv.getVar("button-border-width") solid
+    hsl(
+      #{cv.getVar("button-h")},
+      #{cv.getVar("button-s")},
+      #{cv.getVar("button-border-l")}
+    );
+  box-shadow: 0px 0.0625em 0.125em
+    hsla(
+      #{cv.getVar("button-outer-shadow-h")},
+      #{cv.getVar("button-outer-shadow-s")},
+      #{cv.getVar("button-outer-shadow-l")},
+      #{cv.getVar("button-outer-shadow-a")}
+    );
+  color: hsl(
+    #{cv.getVar("button-h")},
+    #{cv.getVar("button-s")},
+    #{cv.getVar("button-color-l")}
+  );
+  cursor: pointer;
+  font-weight: cv.getVar("button-weight");
+  text-align: center;
+  white-space: nowrap;
+  padding: #{cv.getVar("button-padding-vertical")} #{cv.getVar(
+      "button-padding-horizontal"
+    )};
+
+  // Responsive font sizes
+  @each $bp-name, $bp-sizes in $button-responsive-sizes {
+    @include mx.responsive($bp-name) {
+      @each $size, $value in $bp-sizes {
+        &.#{dv.$class-prefix}is-responsive.#{dv.$class-prefix}is-#{$size} {
+          font-size: $value;
+        }
+      }
+    }
+  }
+
+  // Hover state
+  &:hover,
+  &.#{dv.$class-prefix}is-hovered {
+    background-color: hsl(
+      #{cv.getVar("button-h")},
+      #{cv.getVar("button-s")},
+      calc(
+        #{cv.getVar("button-l")} + #{cv.getVar(
+            "button-hover-background-l-delta"
+          )}
+      )
+    );
+    border-color: hsl(
+      #{cv.getVar("button-h")},
+      #{cv.getVar("button-s")},
+      calc(
+        #{cv.getVar("button-border-l")} + #{cv.getVar(
+            "button-hover-border-l-delta"
+          )}
+      )
+    );
+  }
+
+  // Focus state
+  &:focus-visible,
+  &.#{dv.$class-prefix}is-focused {
+    border-color: hsl(
+      #{cv.getVar("focus-h")},
+      #{cv.getVar("focus-s")},
+      #{cv.getVar("focus-l")}
+    );
+    box-shadow: cv.getVar("focus-shadow-size")
+      hsla(
+        #{cv.getVar("focus-h")},
+        #{cv.getVar("focus-s")},
+        #{cv.getVar("focus-l")},
+        #{cv.getVar("focus-shadow-alpha")}
+      );
+  }
+
+  // Disabled state
+  &[disabled],
+  fieldset[disabled] & {
+    background-color: cv.getVar("button-disabled-background-color");
+    border-color: cv.getVar("button-disabled-border-color");
+    opacity: $button-disabled-opacity;
+    box-shadow: $button-disabled-shadow;
+    pointer-events: none;
+  }
+
+  // Rounded modifier
+  &.#{dv.$class-prefix}is-rounded {
+    border-radius: cv.getVar("radius-rounded");
+    padding: #{cv.getVar("button-padding-vertical")} calc(#{cv.getVar(
+            "button-padding-horizontal"
+          )} + #{$button-rounded-padding-offset});
+  }
+
+  // Sizes
+  @each $size in ("small", "normal", "medium", "large") {
+    &.#{dv.$class-prefix}is-#{$size} {
+      font-size: cv.getVar("size-#{$size}");
+      border-radius: cv.getVar("radius-#{$size}");
+    }
+  }
+}
+
+// === Button Group Styles ===
+.#{dv.$class-prefix}buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  &.#{dv.$class-prefix}are-small {
+    font-size: cv.getVar("size-small");
+  }
+
+  &.#{dv.$class-prefix}are-medium {
+    font-size: cv.getVar("size-medium");
+  }
+
+  &.#{dv.$class-prefix}are-large {
+    font-size: cv.getVar("size-large");
+  }
+
+  &.#{dv.$class-prefix}has-addons {
+    .#{dv.$class-prefix}button {
+      &:not(:first-child) {
+        border-start-start-radius: 0;
+        margin-left: -1px;
+      }
+
+      &:not(:last-child) {
+        border-end-end-radius: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,114 @@
+@use "../utilities/css-variables" as cv;
+@use "../utilities/default-variables" as dv;
+@use "../utilities/mixins" as mx;
+@use "../utilities/extends";
+
+$bones-background: cv.getVar("border") !default;
+$bones-radius: cv.getVar("radius-small") !default;
+$bones-block-min-height: 4.5em !default;
+$bones-lines-gap: 0.75em !default;
+$bones-line-height: 0.75em !default;
+
+:root {
+  @include cv.register-vars(
+    (
+      "bones-background": #{$bones-background},
+      "bones-radius": #{$bones-radius},
+      "bones-block-min-height": #{$bones-block-min-height},
+      "bones-lines-gap": #{$bones-lines-gap},
+      "bones-line-height": #{$bones-line-height},
+    )
+  );
+}
+
+%bones-pulsation {
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-name: pulsate;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+  background-color: cv.getVar("bones-background");
+  border-radius: cv.getVar("bones-radius");
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.#{dv.$class-prefix}is-bones {
+  @extend %bones-pulsation;
+  color: transparent !important;
+
+  em,
+  strong {
+    color: inherit;
+  }
+
+  img {
+    visibility: hidden;
+  }
+
+  &.#{dv.$class-prefix}checkbox {
+    input {
+      opacity: 0;
+    }
+  }
+
+  &.#{dv.$class-prefix}delete {
+    border-radius: cv.getVar("radius-rounded");
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+}
+
+input.#{dv.$class-prefix}is-bones,
+textarea.#{dv.$class-prefix}is-bones {
+  resize: none;
+
+  @include mx.placeholder {
+    color: transparent !important;
+  }
+}
+
+.#{dv.$class-prefix}has-bones {
+  color: transparent !important;
+  position: relative;
+
+  &::after {
+    @extend %bones-pulsation;
+    content: "";
+    display: block;
+    height: 100%;
+    left: 0;
+    max-width: 100%;
+    min-width: 10%;
+    position: absolute;
+    top: 0;
+    width: 7em;
+  }
+}
+
+.#{dv.$class-prefix}bones-block {
+  @extend %block;
+  @extend %bones-pulsation;
+  color: transparent !important;
+  min-height: cv.getVar("bones-block-min-height");
+}
+
+.#{dv.$class-prefix}bones-lines {
+  color: transparent !important;
+  display: flex;
+  flex-direction: column;
+  gap: cv.getVar("bones-lines-gap");
+  position: relative;
+
+  > div {
+    @extend %bones-pulsation;
+    height: cv.getVar("bones-line-height");
+
+    &:last-child {
+      min-width: 4em;
+      width: 30%;
+    }
+  }
+}

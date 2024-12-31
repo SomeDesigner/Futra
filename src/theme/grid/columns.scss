@@ -1,0 +1,114 @@
+@use "sass:math";
+@use "../utilities/css-variables" as cv;
+@use "../utilities/root-variables" as rv;
+@use "../utilities/default-variables" as dv;
+@use "../utilities/extends";
+@use "../utilities/mixins" as mx;
+
+// Base Columns Logic
+.#{dv.$class-prefix}columns {
+    margin-inline-start: calc(-1 * #{cv.getVar("column-gap")});
+    margin-inline-end: calc(-1 * #{cv.getVar("column-gap")});
+    margin-top: calc(-1 * #{cv.getVar("column-gap")});
+  
+    &:last-child {
+      margin-bottom: calc(-1 * #{cv.getVar("column-gap")});
+    }
+  
+    &:not(:last-child) {
+      margin-bottom: calc(#{cv.getVar("block-spacing")} - #{cv.getVar("column-gap")});
+    }
+  
+    // Modifiers
+    &.#{dv.$class-prefix}is-centered {
+      justify-content: center;
+    }
+  
+    &.#{dv.$class-prefix}is-gapless {
+      margin-inline-start: 0;
+      margin-inline-end: 0;
+      margin-top: 0;
+  
+      & > .#{dv.$class-prefix}column {
+        margin: 0;
+        padding: 0 !important;
+      }
+  
+      &:not(:last-child) {
+        margin-bottom: 1.5rem;
+      }
+  
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  
+    &.#{dv.$class-prefix}is-mobile {
+      display: flex;
+    }
+  
+    &.#{dv.$class-prefix}is-multiline {
+      flex-wrap: wrap;
+    }
+  
+    &.#{dv.$class-prefix}is-vcentered {
+      align-items: center;
+    }
+  
+    // Responsive Modifiers
+    @include responsive("from", dv.$tablet) {
+      &:not(.#{dv.$class-prefix}is-desktop) {
+        display: flex;
+      }
+    }
+  
+    @include responsive("from", dv.$desktop) {
+      &.#{dv.$class-prefix}is-desktop {
+        display: flex;
+      }
+    }
+  }
+  
+  // Width and Offset Classes
+  @for $i from 0 through 12 {
+    // Base Classes
+    &.#{dv.$class-prefix}is-#{$i} {
+      flex: none;
+      width: math.percentage(math.div($i, 12));
+    }
+  
+    &.#{dv.$class-prefix}is-offset-#{$i} {
+      margin-inline-start: math.percentage(math.div($i, 12));
+    }
+  
+    // Responsive Variants
+    @each $type, $breakpoint in ("mobile": dv.$tablet, "tablet": dv.$desktop, "widescreen": dv.$widescreen, "fullhd": dv.$fullhd) {
+      @include responsive("from", $breakpoint) {
+        &.#{dv.$class-prefix}is-#{$i}-#{$type} {
+          flex: none;
+          width: math.percentage(math.div($i, 12));
+        }
+  
+        &.#{dv.$class-prefix}is-offset-#{$i}-#{$type} {
+          margin-inline-start: math.percentage(math.div($i, 12));
+        }
+      }
+    }
+  }
+  
+  // Column Gap Classes
+  @for $i from 0 through 8 {
+    // Base Classes
+    &.#{dv.$class-prefix}is-#{$i} {
+      @include cv.register-vars(("column-gap": #{$i * 0.25rem}));
+    }
+  
+    // Responsive Variants
+    @each $type, $breakpoint in ("mobile": dv.$tablet, "tablet": dv.$desktop, "widescreen": dv.$widescreen, "fullhd": dv.$fullhd) {
+      @include responsive("from", $breakpoint) {
+        &.#{dv.$class-prefix}is-#{$i}-#{$type} {
+          @include cv.register-vars(("column-gap": #{$i * 0.25rem}));
+        }
+      }
+    }
+  }  

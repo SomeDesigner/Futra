@@ -1,0 +1,154 @@
+//Entrance animations for buttons, modals, or cards.
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// Simple loading animation
+@keyframes spinAround {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes pulsate {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+//Apply to letters in a span for a fun text wave effect.
+@keyframes wave {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+}
+
+//Background effects for buttons, cards, or page sections.
+@keyframes color-shift {
+  0% {
+    background-color: #ff6347;
+  }
+  25% {
+    background-color: #ffa500;
+  }
+  50% {
+    background-color: #32cd32;
+  }
+  75% {
+    background-color: #1e90ff;
+  }
+  100% {
+    background-color: #ff6347;
+  }
+}
+
+//Call-to-action buttons or glowing effects for important UI elements.
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+      0 0 20px rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+      0 0 40px rgba(255, 255, 255, 0.5);
+  }
+}
+
+// Apply to icons, images, or floating elements for a hover effect.
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+//Intro animations for icons, logos, or buttons.
+@keyframes rotate-in {
+  0% {
+    transform: rotate(-180deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+}
+
+//Sliding animations for sidebar menus or content blocks.
+@keyframes slide-in-blur {
+  0% {
+    transform: translateX(-100%);
+    filter: blur(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+// flicker effect
+@keyframes flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+      opacity: 1;
+    }
+    20%, 24%, 55% {
+      opacity: 0;
+    }
+  }
+
+  //Hover effects for buttons or cards.
+  @keyframes shadow-scale {
+    0% {
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0.1);
+      transform: scale(1);
+    }
+    100% {
+      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+      transform: scale(1.05);
+    }
+  }
+
+  //Eye-catching entrance animations for logos or key elements.
+  @keyframes spiral {
+    0% {
+      transform: rotate(0deg) scale(0);
+      opacity: 0;
+    }
+    50% {
+      transform: rotate(180deg) scale(1.2);
+      opacity: 0.7;
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+      opacity: 1;
+    }
+  }
+  
+  

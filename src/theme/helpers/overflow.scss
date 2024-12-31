@@ -1,0 +1,21 @@
+@use "../utilities/default-variables" as dv;
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}clipped {
+  overflow: hidden !important;
+}
+
+$overflows: auto clip hidden scroll visible;
+
+@each $overflow in $overflows {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}overflow-#{$overflow} {
+    overflow: $overflow !important;
+  }
+
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}overflow-x-#{$overflow} {
+    overflow-x: $overflow !important;
+  }
+
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}overflow-y-#{$overflow} {
+    overflow-y: $overflow !important;
+  }
+}

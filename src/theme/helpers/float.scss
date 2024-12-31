@@ -1,0 +1,28 @@
+@use "../utilities/default-variables" as iv;
+@use "../utilities/mixins" as mx;
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}clearfix {
+  @include mx.clearfix;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}float-left,
+.#{dv.$class-prefix}#{dv.$helpers-prefix}pulled-left {
+  float: left !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}float-right,
+.#{dv.$class-prefix}#{dv.$helpers-prefix}pulled-right {
+  float: right !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}float-none {
+  float: none !important;
+}
+
+$clears: both left none right;
+
+@each $clear in $clears {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}clear-#{$clear} {
+    clear: $clear !important;
+  }
+}

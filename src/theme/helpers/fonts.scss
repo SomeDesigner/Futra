@@ -1,0 +1,170 @@
+@use "sass:list";
+
+@use "../utilities/root-variables" as rv;
+@use "../utilities/default-variables" as dv;
+@use "../utilities/mixins" as mx;
+
+@mixin typography-size($target: "") {
+  @each $size in rv.$sizes {
+    $i: list.index(rv.$sizes, $size);
+
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}size-#{$i}#{if($target == "", "", "-" + $target)} {
+      font-size: $size !important;
+    }
+  }
+}
+
+@include typography-size;
+
+@include mx.mobile {
+  @include typography-size("mobile");
+}
+
+@include mx.tablet {
+  @include typography-size("tablet");
+}
+
+@include mx.touch {
+  @include typography-size("touch");
+}
+
+@include mx.desktop {
+  @include typography-size("desktop");
+}
+
+@include mx.widescreen {
+  @include typography-size("widescreen");
+}
+
+@include mx.fullhd {
+  @include typography-size("fullhd");
+}
+
+$alignments: (
+  "centered": "center",
+  "justified": "justify",
+  "left": "left",
+  "right": "right",
+);
+
+@each $alignment, $text-align in $alignments {
+  .#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-#{$alignment} {
+    text-align: #{$text-align} !important;
+  }
+}
+
+@each $alignment, $text-align in $alignments {
+  @include mx.mobile {
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-#{$alignment}-mobile {
+      text-align: #{$text-align} !important;
+    }
+  }
+
+  @include mx.tablet {
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-#{$alignment}-tablet {
+      text-align: #{$text-align} !important;
+    }
+  }
+
+  @include mx.tablet-only {
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-#{$alignment}-tablet-only {
+      text-align: #{$text-align} !important;
+    }
+  }
+
+  @include mx.touch {
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-#{$alignment}-touch {
+      text-align: #{$text-align} !important;
+    }
+  }
+
+  @include mx.desktop {
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-#{$alignment}-desktop {
+      text-align: #{$text-align} !important;
+    }
+  }
+
+  @include mx.desktop-only {
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-#{$alignment}-desktop-only {
+      text-align: #{$text-align} !important;
+    }
+  }
+
+  @include mx.widescreen {
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-#{$alignment}-widescreen {
+      text-align: #{$text-align} !important;
+    }
+  }
+
+  @include mx.widescreen-only {
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-#{$alignment}-widescreen-only {
+      text-align: #{$text-align} !important;
+    }
+  }
+
+  @include mx.fullhd {
+    .#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-#{$alignment}-fullhd {
+      text-align: #{$text-align} !important;
+    }
+  }
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}capitalized {
+  text-transform: capitalize !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}lowercase {
+  text-transform: lowercase !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}uppercase {
+  text-transform: uppercase !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}italic {
+  font-style: italic !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}underlined {
+  text-decoration: underline !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-weight-light {
+  font-weight: dv.$weight-light !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-weight-normal {
+  font-weight: dv.$weight-normal !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-weight-medium {
+  font-weight: dv.$weight-medium !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-weight-semibold {
+  font-weight: dv.$weight-semibold !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-has-prefix}text-weight-bold {
+  font-weight: dv.$weight-bold !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}family-primary {
+  font-family: rv.$family-primary !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}family-secondary {
+  font-family: rv.$family-secondary !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}family-sans-serif {
+  font-family: dv.$family-sans-serif !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}family-monospace {
+  font-family: dv.$family-monospace !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}family-code {
+  font-family: rv.$family-code !important;
+}

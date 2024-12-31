@@ -1,0 +1,19 @@
+@use "../utilities/extends";
+@use "../utilities/default-variables" as dv;
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}radiusless {
+  border-radius: 0 !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}shadowless {
+  box-shadow: none !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}clickable {
+  cursor: pointer !important;
+  pointer-events: all !important;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}unselectable {
+  @extend %unselectable;
+}

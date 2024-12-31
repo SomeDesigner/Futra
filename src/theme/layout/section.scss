@@ -1,0 +1,37 @@
+@use "../utilities/css-variables" as cv;
+@use "../utilities/default-variables" as dv;
+@use "../utilities/mixins" as mx;
+
+$section-padding: 3rem 1.5rem !default;
+$section-padding-desktop: 3rem 3rem !default;
+$section-padding-medium: 9rem 4.5rem !default;
+$section-padding-large: 18rem 6rem !default;
+
+.#{dv.$class-prefix}section {
+  @include cv.register-vars((
+    "section-padding": #{$section-padding},
+    "section-padding-desktop": #{$section-padding-desktop},
+    "section-padding-medium": #{$section-padding-medium},
+    "section-padding-large": #{$section-padding-large},
+  ));
+  
+  padding: cv.getVar("section-padding");
+
+  // Responsiveness
+  @include mx.responsive("from", "1024px") {
+    padding: cv.getVar("section-padding-desktop");
+
+    // Sizes
+    &.#{dv.$class-prefix}is-medium {
+      padding: cv.getVar("section-padding-medium");
+    }
+
+    &.#{dv.$class-prefix}is-large {
+      padding: cv.getVar("section-padding-large");
+    }
+  }
+
+  &.#{dv.$class-prefix}is-fullheight {
+    min-height: 100vh;
+  }
+}

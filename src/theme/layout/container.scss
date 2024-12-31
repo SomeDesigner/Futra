@@ -1,0 +1,66 @@
+@use "../utilities/default-variables" as dv;
+@use "../utilities/mixins" as mx;
+
+$container-offset: 2 * dv.$gap !default;
+$container-max-width: dv.$fullhd !default;
+
+.#{dv.$class-prefix}container {
+  flex-grow: 1;
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+
+  // Fluid Container
+  &.#{dv.$class-prefix}is-fluid {
+    max-width: none !important;
+    padding-left: dv.$gap;
+    padding-right: dv.$gap;
+    width: 100%;
+  }
+
+  // Tablet Max Width
+  &.#{dv.$class-prefix}is-max-tablet {
+    max-width: dv.$tablet - $container-offset;
+  }
+
+  // Desktop Max Width
+  @include responsive("from", dv.$desktop) {
+    &:not(.#{dv.$class-prefix}is-max-tablet) {
+      max-width: dv.$desktop - $container-offset;
+    }
+  }
+
+  // Widescreen Max Width
+  @include responsive("until", dv.$widescreen) {
+    &.#{dv.$class-prefix}is-widescreen:not(.#{dv.$class-prefix}is-max-tablet):not(
+        .#{dv.$class-prefix}is-max-desktop
+      ) {
+      max-width: min(dv.$widescreen, $container-max-width) - $container-offset;
+    }
+  }
+
+  // Full HD Max Width
+  @include responsive("until", dv.$fullhd) {
+    &.#{dv.$class-prefix}is-fullhd:not(.#{dv.$class-prefix}is-max-tablet):not(
+        .#{dv.$class-prefix}is-max-desktop
+      ):not(.#{dv.$class-prefix}is-max-widescreen) {
+      max-width: min(dv.$fullhd, $container-max-width) - $container-offset;
+    }
+  }
+
+  // Widescreen Specific
+  @include responsive("from", dv.$widescreen) {
+    &:not(.#{dv.$class-prefix}is-max-tablet):not(.#{dv.$class-prefix}is-max-desktop) {
+      max-width: min(dv.$widescreen, $container-max-width) - $container-offset;
+    }
+  }
+
+  // Full HD Specific
+  @include responsive("from", dv.$fullhd) {
+    &:not(.#{dv.$class-prefix}is-max-tablet):not(.#{dv.$class-prefix}is-max-desktop):not(
+        .#{dv.$class-prefix}is-max-widescreen
+      ) {
+      max-width: min(dv.$fullhd, $container-max-width) - $container-offset;
+    }
+  }
+}

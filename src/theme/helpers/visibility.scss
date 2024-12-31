@@ -1,0 +1,221 @@
+@use "../utilities/default-variables" as dv;
+@use "../utilities/mixins" as mx;
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}display-none,
+.#{dv.$class-prefix}#{dv.$helpers-prefix}hidden {
+  display: none !important;
+}
+
+$displays: block flex inline inline-block inline-flex grid;
+
+@each $display in $displays {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}display-#{$display},
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}#{$display} {
+    display: $display !important;
+  }
+
+  @include mx.mobile {
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}display-#{$display}-mobile,
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}#{$display}-mobile {
+      display: $display !important;
+    }
+  }
+
+  @include mx.tablet {
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}display-#{$display}-tablet,
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}#{$display}-tablet {
+      display: $display !important;
+    }
+  }
+
+  @include mx.tablet-only {
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}display-#{$display}-tablet-only,
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}#{$display}-tablet-only {
+      display: $display !important;
+    }
+  }
+
+  @include mx.touch {
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}display-#{$display}-touch,
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}#{$display}-touch {
+      display: $display !important;
+    }
+  }
+
+  @include mx.desktop {
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}display-#{$display}-desktop,
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}#{$display}-desktop {
+      display: $display !important;
+    }
+  }
+
+  @include mx.desktop-only {
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}display-#{$display}-desktop-only,
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}#{$display}-desktop-only {
+      display: $display !important;
+    }
+  }
+
+  @include mx.widescreen {
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}display-#{$display}-widescreen,
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}#{$display}-widescreen {
+      display: $display !important;
+    }
+  }
+
+  @include mx.widescreen-only {
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}display-#{$display}-widescreen-only,
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}#{$display}-widescreen-only {
+      display: $display !important;
+    }
+  }
+
+  @include mx.fullhd {
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}display-#{$display}-fullhd,
+    .#{dv.$class-prefix}#{dv.$helpers-prefix}#{$display}-fullhd {
+      display: $display !important;
+    }
+  }
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}sr-only {
+  border: none !important;
+  clip: rect(0, 0, 0, 0) !important;
+  height: 0.01em !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  white-space: nowrap !important;
+  width: 0.01em !important;
+}
+
+@include mx.mobile {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}display-none-mobile,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}hidden-mobile {
+    display: none !important;
+  }
+}
+
+@include mx.tablet {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}display-none-tablet,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}hidden-tablet {
+    display: none !important;
+  }
+}
+
+@include mx.tablet-only {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}display-none-tablet-only,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}hidden-tablet-only {
+    display: none !important;
+  }
+}
+
+@include mx.touch {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}display-none-touch,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}hidden-touch {
+    display: none !important;
+  }
+}
+
+@include mx.desktop {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}display-none-desktop,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}hidden-desktop {
+    display: none !important;
+  }
+}
+
+@include mx.desktop-only {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}display-none-desktop-only,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}hidden-desktop-only {
+    display: none !important;
+  }
+}
+
+@include mx.widescreen {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}display-none-widescreen,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}hidden-widescreen {
+    display: none !important;
+  }
+}
+
+@include mx.widescreen-only {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}display-none-widescreen-only,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}hidden-widescreen-only {
+    display: none !important;
+  }
+}
+
+@include mx.fullhd {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}display-none-fullhd,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}hidden-fullhd {
+    display: none !important;
+  }
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}visibility-hidden,
+.#{dv.$class-prefix}#{dv.$helpers-prefix}invisible {
+  visibility: hidden !important;
+}
+
+@include mx.mobile {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}visibility-hidden-mobile,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}invisible-mobile {
+    visibility: hidden !important;
+  }
+}
+
+@include mx.tablet {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}visibility-hidden-tablet,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}invisible-tablet {
+    visibility: hidden !important;
+  }
+}
+
+@include mx.tablet-only {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}visibility-hidden-tablet-only,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}invisible-tablet-only {
+    visibility: hidden !important;
+  }
+}
+
+@include mx.touch {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}visibility-hidden-touch,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}invisible-touch {
+    visibility: hidden !important;
+  }
+}
+
+@include mx.desktop {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}visibility-hidden-desktop,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}invisible-desktop {
+    visibility: hidden !important;
+  }
+}
+
+@include mx.desktop-only {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}visibility-hidden-desktop-only,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}invisible-desktop-only {
+    visibility: hidden !important;
+  }
+}
+
+@include mx.widescreen {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}visibility-hidden-widescreen,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}invisible-widescreen {
+    visibility: hidden !important;
+  }
+}
+
+@include mx.widescreen-only {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}visibility-hidden-widescreen-only,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}invisible-widescreen-only {
+    visibility: hidden !important;
+  }
+}
+
+@include mx.fullhd {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}visibility-hidden-fullhd,
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}invisible-fullhd {
+    visibility: hidden !important;
+  }
+}

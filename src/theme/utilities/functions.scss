@@ -1,0 +1,245 @@
+@use "sass:color";
+@use "sass:list";
+@use "sass:map";
+@use "sass:math";
+@use "sass:meta";
+@use "sass:string";
+
+@function mergeColorMaps($futra-colors, $custom-colors) {
+  $merged-colors: $futra-colors;
+
+  @if meta.type-of($custom-colors) == "map" {
+    @each $name, $components in $custom-colors {
+      @if meta.type-of($name) ==
+        "string" and
+        (
+          meta.type-of($components) ==
+            "color" or
+            (
+              meta.type-of($components) ==
+                "list" and
+                list.length($components) >=
+                1
+            )
+        )
+      {
+        $color-base: if(
+          meta.type-of($components) == "color",
+          $components,
+          list.nth($components, 1)
+        );
+        $color-invert: null;
+        $color-light: null;
+        $color-dark: null;
+
+        @if meta.type-of($components) == "list" {
+          $color-invert: list.nth($components, 2, null);
+          $color-light: list.nth(
+            $components,
+            3,
+            futraFindLightColor($color-base)
+          );
+          $color-dark: list.nth(
+            $components,
+            4,
+            futraFindDarkColor($color-base)
+          );
+        } @else {
+          $color-invert: futraFindColorInvert($color-base);
+          $color-light: futraFindLightColor($color-base);
+          $color-dark: futraFindDarkColor($color-base);
+        }
+
+        @if meta.type-of($color-base) == "color" {
+          $merged-colors: map.merge(
+            $merged-colors,
+            (
+              $name: (
+                $color-base,
+                $color-invert,
+                $color-light,
+                $color-dark,
+              ),
+            )
+          );
+        }
+      }
+    }
+  }
+
+  @return $merged-colors;
+}
+
+@function powerNumber($number, $exp) {
+  @if $exp == 0 {
+    @return 1;
+  } @else if $exp > 0 {
+    @return $number * powerNumber($number, $exp - 1);
+  } @else {
+    @return math.div(1, powerNumber($number, -$exp));
+  }
+}
+
+@function futraColorLuminance($color) {
+  @if meta.type-of($color) != "color" {
+    @return 0.55;
+  }
+
+  $red: math.div(color.channel($color, "red", $space: rgb), 255);
+  $green: math.div(color.channel($color, "green", $space: rgb), 255);
+  $blue: math.div(color.channel($color, "blue", $space: rgb), 255);
+
+  // Apply luminance transformation
+  $red: if(
+    $red < 0.03928,
+    math.div($red, 12.92),
+    math.pow(math.div($red + 0.055, 1.055), 2.4)
+  );
+  $green: if(
+    $green < 0.03928,
+    math.div($green, 12.92),
+    math.pow(math.div($green + 0.055, 1.055), 2.4)
+  );
+  $blue: if(
+    $blue < 0.03928,
+    math.div($blue, 12.92),
+    math.pow(math.div($blue + 0.055, 1.055), 2.4)
+  );
+
+  // Return the relative luminance
+  @return $red * 0.2126 + $green * 0.7152 + $blue * 0.0722;
+}
+
+@function futraFindColorInvert($color) {
+  @if futraColorLuminance($color) > 0.55 {
+    @return rgba(#000, 0.7); // Dark overlay for light colors
+  }
+  @return #fff; // White for darker colors
+}
+
+@function futraFindLightColor($color, $l: 96%) {
+  @if meta.type-of($color) == "color" {
+    $current-lightness: color.channel($color, "lightness", $space: hsl);
+
+    // Use the greater of the provided or current lightness
+    $l: max($l, $current-lightness);
+
+    @return color.change($color, $lightness: $l);
+  }
+
+  // Fallback for non-color values
+  @return $background;
+}
+
+@function futraFindDarkColor($color, $base-l: 29%) {
+  @if meta.type-of($color) == "color" {
+    $luminance-delta: 0.53 - futraColorLuminance($color);
+    $target-l: math.round($base-l + $luminance-delta * 53);
+    @return color.change($color, $lightness: max($base-l, $target-l));
+  }
+  @return $text-strong;
+}
+
+@function futraRgba($color, $alpha) {
+  @if meta.type-of($color) == "color" {
+    @return rgba($color, $alpha);
+  }
+  @return $color;
+}
+
+@function futraDarken($color, $amount) {
+  @if meta.type-of($color) == "color" {
+    @return color.adjust($color, $lightness: -$amount, $space: hsl);
+  }
+  @return $color;
+}
+
+@function futraLighten($color, $amount) {
+  @if meta.type-of($color) == "color" {
+    @return color.adjust($color, $lightness: $amount, $space: hsl);
+  }
+  @return $color;
+}
+
+@function futraColorBrightness($n) {
+  $brightness: math.round(
+    math.div(
+        color.channel($n, "red", $space: rgb) * 299 +
+          color.channel($n, "green", $space: rgb) * 587 +
+          color.channel($n, "blue", $space: rgb) * 114,
+        1000
+      )
+      or
+      calc(
+        (
+            color.channel($n, "red", $space: rgb) * 299 +
+              color.channel($n, "green", $space: rgb) * 587 +
+              color.channel($n, "blue", $space: rgb) * 114
+          ) / 1000
+      )
+  );
+
+  $threshold: math.div(255, 2); // Midpoint brightness
+
+  @return if($brightness < $threshold, "dark", "bright");
+}
+
+@function futraEnoughContrast($foreground, $background) {
+  $foreground-lum: futraColorLuminance($foreground) + 0.05;
+  $background-lum: futraColorLuminance($background) + 0.05;
+
+  @return if(
+    $foreground-lum > $background-lum,
+    math.div($foreground-lum, $background-lum),
+    math.div($background-lum, $foreground-lum)
+  );
+}
+
+
+@function futraStringToNumber($value) {
+  @if meta.type-of($value) == "number" {
+    @return $value;
+  }
+
+  @if meta.type-of($value) != "string" {
+    @error "Value must be a string or number.";
+  }
+
+  $result: 0;
+  $negative: string.slice($value, 1, 1) == "-";
+  $decimal-position: null;
+  $numbers: (
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9,
+  );
+
+  @for $i from if($negative, 2, 1) through string.length($value) {
+    $char: string.slice($value, $i, $i);
+
+    @if map.has-key($numbers, $char) {
+      @if $decimal-position {
+        $decimal-position: $decimal-position * 10;
+        $result: $result + map.get($numbers, $char) / $decimal-position;
+      } @else {
+        $result: $result * 10 + map.get($numbers, $char);
+      }
+    } @else if $char == "." {
+      @if $decimal-position {
+        @error "Invalid number format.";
+      }
+      $decimal-position: 1;
+    } @else {
+      @error "Invalid character in number string.";
+    }
+  }
+
+  @return if($negative, -$result, $result);
+}

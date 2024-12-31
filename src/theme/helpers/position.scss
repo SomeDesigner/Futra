@@ -1,0 +1,19 @@
+@use "../utilities/extends";
+@use "../utilities/default-variables" as dv;
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}overlay,
+.#{dv.$class-prefix}#{dv.$helpers-prefix}overlay {
+  @extend %overlay;
+}
+
+.#{dv.$class-prefix}#{dv.$helpers-prefix}relative {
+  position: relative !important;
+}
+
+$positions: absolute fixed relative static sticky;
+
+@each $position in $positions {
+  .#{dv.$class-prefix}#{dv.$helpers-prefix}position-#{$position} {
+    position: $position !important;
+  }
+}

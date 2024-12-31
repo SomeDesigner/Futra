@@ -1,0 +1,112 @@
+@use "default-variables" as dv;
+@use "functions" as fn;
+
+// Scheme colors
+
+$scheme-main: dv.$white !default;
+$scheme-main-bis: dv.$whiteish !default;
+$scheme-main-ter: dv.$whiteer !default;
+$scheme-invert: dv.$black !default;
+$scheme-invert-bis: dv.$blackish !default;
+$scheme-invert-ter: dv.$blacker !default;
+
+// Text colors
+
+$text: dv.$grey-dark !default;
+$text-invert: fn.futraFindColorInvert($text) !default;
+$text-weak: dv.$grey !default;
+$text-strong: dv.$grey-darker !default;
+
+// Status colors
+
+$primary: dv.$turquoise !default;
+$info: dv.$cyan !default;
+$success: dv.$green !default;
+$warning: dv.$yellow !default;
+$danger: dv.$red !default;
+$light: dv.$whiteer !default;
+$dark: dv.$grey-darker !default;
+
+// Link colors
+
+$link: dv.$blue !default;
+
+// Decorative colors
+
+$background: dv.$whiteer !default;
+$border: dv.$grey-lighter !default;
+$border-weak: dv.$grey-lightest !default;
+
+// Code colors
+
+$code: dv.$red !default;
+$code-background: $background !default;
+
+$pre: $text !default;
+$pre-background: $background !default;
+
+// Typography
+
+$family-primary: dv.$family-sans-serif !default;
+$family-secondary: dv.$family-sans-serif !default;
+$family-code: dv.$family-monospace !default;
+
+$size-small: dv.$size-7 !default;
+$size-normal: dv.$size-6 !default;
+$size-medium: dv.$size-5 !default;
+$size-large: dv.$size-4 !default;
+
+// Effects
+
+$shadow-color: dv.$black !default;
+
+// Lists and maps
+$custom-colors: null !default;
+$custom-shades: null !default;
+
+$colors: fn.mergeColorMaps(
+  (
+    "white": (
+      dv.$white,
+      dv.$black,
+    ),
+    "black": (
+      dv.$black,
+      dv.$white,
+    ),
+    "light": (
+      $light,
+      $dark,
+    ),
+    "dark": (
+      $dark,
+      $light,
+    ),
+    "text": $text,
+    "primary": $primary,
+    "link": $link,
+    "info": $info,
+    "success": $success,
+    "warning": $warning,
+    "danger": $danger,
+  ),
+  $custom-colors
+) !default;
+
+$shades: fn.mergeColorMaps(
+  (
+    "blackish": dv.$blackish,
+    "blacker": dv.$blacker,
+    "grey-darker": dv.$grey-darker,
+    "grey-dark": dv.$grey-dark,
+    "grey": dv.$grey,
+    "grey-light": dv.$grey-light,
+    "grey-lighter": dv.$grey-lighter,
+    "whiteer": dv.$whiteer,
+    "whiteish": dv.$whiteish,
+  ),
+  $custom-shades
+) !default;
+
+$sizes: dv.$size-1 dv.$size-2 dv.$size-3 dv.$size-4 dv.$size-5 dv.$size-6
+  dv.$size-7 !default;

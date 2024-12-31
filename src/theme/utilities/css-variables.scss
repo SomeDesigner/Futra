@@ -1,0 +1,159 @@
+@use "sass:color";
+@use "sass:list";
+@use "sass:map";
+@use "sass:math";
+
+@use "default-variables" as dv;
+@use "functions" as fn;
+
+@function buildVarName($name, $prefix: "", $suffix: "") {
+  @return "--#{dv.$cssvars-prefix}#{$prefix}#{$name}#{$suffix}";
+}
+
+@function buildHslaString($name, $l, $a: 1) {
+  $lightness: getVar($name, "", "-l");
+  @if $l {
+    $lightness: $l;
+  }
+  @return "hsla(#{getVar($name, '', '-h')}, #{getVar($name, '', '-s')}, #{$lightness}, #{$a})";
+}
+
+@function getVar($name, $prefix: "", $suffix: "") {
+  $varName: buildVarName($name, $prefix, $suffix);
+  @return var(#{$varName});
+}
+
+@function getVarWithBackup($name, $backup, $prefix: "", $suffix: "") {
+  $varName: buildVarName($name, $prefix, $suffix);
+  $backupName: buildVarName($backup, $prefix, $suffix);
+  @return var(#{$varName}, var(#{$backupName}));
+}
+
+@function getRgbaVar($name, $alpha, $prefix: "", $suffix: "") {
+  $varName: buildVarName($name, $prefix, $suffix);
+  @return unquote("rgba(var(#{$varName}), #{$alpha})");
+}
+
+@mixin register-var($name, $value, $prefix: "", $suffix: "") {
+  $varName: buildVarName($name, $prefix, $suffix);
+  #{$varName}: #{$value};
+}
+
+@mixin register-vars($vars, $prefix: "", $suffix: "") {
+  @each $name, $value in $vars {
+    @include register-var($name, $value, $prefix, $suffix);
+  }
+}
+
+@mixin register-rgb($name, $value) {
+  @include register-var(
+    $name,
+    (
+      color.channel($value, "red", $space: rgb),
+      color.channel($value, "green", $space: rgb),
+      color.channel($value, "blue", $space: rgb)
+    ),
+    "",
+    "-rgb"
+  );
+}
+
+@mixin register-hsl($name, $value) {
+  @each $channel in ("hue", "saturation", "lightness") {
+    @include register-var(
+      $name,
+      math.round(color.channel($value, $channel, $space: hsl)),
+      "",
+      "-#{substr($channel, 1, 1)}" // h, s, or l
+    );
+  }
+}
+
+@mixin generate-color-palette($name, $base, $scheme-main-l, $invert: null, $light: null, $dark: null) {
+  // Register the base color
+  @include register-base-color($name, $base);
+
+  // Register shades or specific color variations if provided
+  @if $invert {
+    @include register-var($name, color.channel($invert, "lightness", $space: hsl), "", "-invert-l");
+    @include register-var("#{$name}-invert", $invert);
+  }
+
+  @if $light {
+    @include register-var($name, color.channel($light, "lightness", $space: hsl), "", "-light-l");
+    @include register-var("#{$name}-light", $light);
+  }
+
+  @if $dark {
+    @include register-var($name, color.channel($dark, "lightness", $space: hsl), "", "-dark-l");
+    @include register-var("#{$name}-dark", $dark);
+  }
+
+  // Automatically generate on-scheme colors
+  @include generate-on-scheme-colors($name, $base, $scheme-main-l);
+}
+
+
+@mixin generate-on-scheme-colors($name, $base, $scheme-main) {
+  $scheme-main-brightness: fn.futraColorBrightness($scheme-main);
+  $on-scheme-color: $base;
+
+  @if fn.futraColorLuminance($base) > fn.futraColorLuminance($scheme-main) {
+    @include adjust-contrast($on-scheme-color, $scheme-main, "darken");
+  } @else {
+    @include adjust-contrast($on-scheme-color, $scheme-main, "lighten");
+  }
+
+  @include register-var("#{$name}-on-scheme", $on-scheme-color);
+}
+
+@mixin adjust-contrast($foreground, $background, $direction) {
+  $attempts: 0;
+  $max-attempts: 20;
+
+  @while fn.futraEnoughContrast($foreground, $background) <
+    4.5 and
+    $attempts <
+    $max-attempts
+  {
+    $foreground: color.adjust(
+      $foreground,
+      $lightness: if($direction == "lighten", 5%, -5%)
+    );
+    $attempts: $attempts + 1;
+  }
+}
+
+@mixin register-base-color($name, $base) {
+  @include register-hsl($name, $base);
+  @include register-rgb($name, $base);
+}
+
+@mixin generate-basic-palette($name, $base, $invert: null) {
+  @include register-base-color($name, $base);
+
+  @if $invert {
+    @include register-var(
+      $name,
+      color.channel($invert, "lightness", $space: hsl),
+      "",
+      "-invert-l"
+    );
+    @include register-var("#{$name}-invert", $invert);
+  }
+}
+
+@mixin futra-theme($name) {
+  [data-#{dv.$class-prefix}theme="#{$name}"],
+  .#{dv.$class-prefix}theme-#{$name} {
+    @content;
+  }
+}
+
+@mixin system-theme($name) {
+  @media (prefers-color-scheme: #{$name}) {
+    :root {
+      @content;
+    }
+  }
+}
