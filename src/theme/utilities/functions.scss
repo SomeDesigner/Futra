@@ -154,10 +154,18 @@
 
 /// Calculate contrast ratio between two colors
 @function futraColorContrast($foreground, $background) {
+  @if type-of($foreground) != "color" or type-of($background) != "color" {
+    @error "Both $foreground and $background must be colors.";
+  }
+
   $l1: futraColorLuminance($foreground) + 0.05;
   $l2: futraColorLuminance($background) + 0.05;
 
-  @return if($l1 > $l2, math.div($l1, $l2), math.div($l2, $l1));
+  @return if(
+    $l1 > $l2,
+    math.div($l1, $l2),
+    math.div($l2, $l1)
+  );
 }
 
 
