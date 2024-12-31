@@ -3,8 +3,8 @@
 @use "../utilities/mixins" as mx;
 @use "../utilities/extends";
 
-$bones-background: cv.getVar("border") !default;
-$bones-radius: cv.getVar("radius-small") !default;
+$bones-background: cv.get-var("border") !default;
+$bones-radius: cv.get-var("radius-small") !default;
 $bones-block-min-height: 4.5em !default;
 $bones-lines-gap: 0.75em !default;
 $bones-line-height: 0.75em !default;
@@ -26,8 +26,8 @@ $bones-line-height: 0.75em !default;
   animation-iteration-count: infinite;
   animation-name: pulsate;
   animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
-  background-color: cv.getVar("bones-background");
-  border-radius: cv.getVar("bones-radius");
+  background-color: cv.get-var("bones-background");
+  border-radius: cv.get-var("bones-radius");
   box-shadow: none;
   pointer-events: none;
 }
@@ -52,7 +52,7 @@ $bones-line-height: 0.75em !default;
   }
 
   &.#{dv.$class-prefix}delete {
-    border-radius: cv.getVar("radius-rounded");
+    border-radius: cv.get-var("radius-rounded");
 
     &::before,
     &::after {
@@ -92,19 +92,19 @@ textarea.#{dv.$class-prefix}is-bones {
   @extend %block;
   @extend %bones-pulsation;
   color: transparent !important;
-  min-height: cv.getVar("bones-block-min-height");
+  min-height: cv.get-var("bones-block-min-height");
 }
 
 .#{dv.$class-prefix}bones-lines {
   color: transparent !important;
   display: flex;
   flex-direction: column;
-  gap: cv.getVar("bones-lines-gap");
+  gap: cv.get-var("bones-lines-gap");
   position: relative;
 
   > div {
     @extend %bones-pulsation;
-    height: cv.getVar("bones-line-height");
+    height: cv.get-var("bones-line-height");
 
     &:last-child {
       min-width: 4em;

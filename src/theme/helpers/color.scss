@@ -8,9 +8,9 @@ $digits: "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55",
 // Base classes for color helpers
 @mixin color-helper-classes($name, $type) {
   $base-hsl: (
-    "h": #{cv.getVar($name, "", "-h")},
-    "s": #{cv.getVar($name, "", "-s")},
-    "l": #{cv.getVar($name, "", "-l")}
+    "h": #{cv.get-var($name, "", "-h")},
+    "s": #{cv.get-var($name, "", "-s")},
+    "l": #{cv.get-var($name, "", "-l")}
   );
 
   // Generate standard colors
@@ -20,12 +20,12 @@ $digits: "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55",
 
   // Generate inverted colors
   .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name}-invert {
-    #{$type}-color: hsl(map.get($base-hsl, "h"), map.get($base-hsl, "s"), #{cv.getVar($name, "", "-invert-l")}) !important;
+    #{$type}-color: hsl(map.get($base-hsl, "h"), map.get($base-hsl, "s"), #{cv.get-var($name, "", "-invert-l")}) !important;
   }
 
   // Generate on-scheme colors
   .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name}-on-scheme {
-    #{$type}-color: hsl(map.get($base-hsl, "h"), map.get($base-hsl, "s"), #{cv.getVar($name, "", "-on-scheme-l")}) !important;
+    #{$type}-color: hsl(map.get($base-hsl, "h"), map.get($base-hsl, "s"), #{cv.get-var($name, "", "-on-scheme-l")}) !important;
   }
 
   // Generate light and dark variations
@@ -34,7 +34,7 @@ $digits: "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55",
       #{$type}-color: hsl(
         map.get($base-hsl, "h"),
         map.get($base-hsl, "s"),
-        #{cv.getVar($name, "", "-#{$variation}-l")}
+        #{cv.get-var($name, "", "-#{$variation}-l")}
       ) !important;
     }
 
@@ -42,7 +42,7 @@ $digits: "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55",
       #{$type}-color: hsl(
         map.get($base-hsl, "h"),
         map.get($base-hsl, "s"),
-        #{cv.getVar($name, "", "-#{$variation}-invert-l")}
+        #{cv.get-var($name, "", "-#{$variation}-invert-l")}
       ) !important;
     }
   }
@@ -51,9 +51,9 @@ $digits: "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55",
 // Generate hover and active states
 @mixin interactive-color-classes($name, $type) {
   $base-hsl: (
-    "h": #{cv.getVar($name, "", "-h")},
-    "s": #{cv.getVar($name, "", "-s")},
-    "l": #{cv.getVar($name, "", "-l")}
+    "h": #{cv.get-var($name, "", "-h")},
+    "s": #{cv.get-var($name, "", "-s")},
+    "l": #{cv.get-var($name, "", "-l")}
   );
 
   .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name}.is-hoverable {
@@ -62,7 +62,7 @@ $digits: "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55",
       #{$type}-color: hsl(
         map.get($base-hsl, "h"),
         map.get($base-hsl, "s"),
-        calc(map.get($base-hsl, "l") + #{cv.getVar("hover-color-l-delta")})
+        calc(map.get($base-hsl, "l") + #{cv.get-var("hover-color-l-delta")})
       ) !important;
     }
 
@@ -70,7 +70,7 @@ $digits: "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55",
       #{$type}-color: hsl(
         map.get($base-hsl, "h"),
         map.get($base-hsl, "s"),
-        calc(map.get($base-hsl, "l") + #{cv.getVar("active-color-l-delta")})
+        calc(map.get($base-hsl, "l") + #{cv.get-var("active-color-l-delta")})
       ) !important;
     }
   }
@@ -81,17 +81,17 @@ $digits: "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55",
   @each $digit in $digits {
     .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name}-#{$digit} {
       #{$type}-color: hsl(
-        #{cv.getVar($name, "", "-h")},
-        #{cv.getVar($name, "", "-s")},
-        #{cv.getVar($name, "", "-#{$digit}-l")}
+        #{cv.get-var($name, "", "-h")},
+        #{cv.get-var($name, "", "-s")},
+        #{cv.get-var($name, "", "-#{$digit}-l")}
       ) !important;
     }
 
     .#{dv.$class-prefix}#{dv.$helpers-has-prefix}#{$type}-#{$name}-#{$digit}-invert {
       #{$type}-color: hsl(
-        #{cv.getVar($name, "", "-h")},
-        #{cv.getVar($name, "", "-s")},
-        #{cv.getVar($name, "", "-#{$digit}-invert-l")}
+        #{cv.get-var($name, "", "-h")},
+        #{cv.get-var($name, "", "-s")},
+        #{cv.get-var($name, "", "-#{$digit}-invert-l")}
       ) !important;
     }
   }
@@ -100,13 +100,13 @@ $digits: "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55",
 // Generate palette variables
 @mixin generate-palette($name) {
   .#{dv.$class-prefix}#{dv.$helpers-prefix}palette-#{$name} {
-    --h: #{cv.getVar($name, "", "-h")};
-    --s: #{cv.getVar($name, "", "-s")};
-    --l: #{cv.getVar($name, "", "-l")};
+    --h: #{cv.get-var($name, "", "-h")};
+    --s: #{cv.get-var($name, "", "-s")};
+    --l: #{cv.get-var($name, "", "-l")};
     --color: hsl(var(--h), var(--s), var(--l));
 
     @each $digit in $digits {
-      --#{$digit}-l: #{cv.getVar($name, "", "-#{$digit}-l")};
+      --#{$digit}-l: #{cv.get-var($name, "", "-#{$digit}-l")};
       --color-#{$digit}: hsl(var(--h), var(--s), var(--#{$digit}-l));
     }
   }

@@ -6,171 +6,647 @@
 @use "../utilities/extends";
 @use "../utilities/mixins" as mx;
 
-// === Variables ===
+$button-h: #{cv.get-var("scheme-h")};
+$button-s: #{cv.get-var("scheme-s")};
+$button-l: #{cv.get-var("scheme-main-l")};
+$button-background-l: #{cv.get-var("scheme-main-l")};
+$button-background-l-delta: 0%;
+$button-hover-background-l-delta: #{cv.get-var("hover-background-l-delta")};
+$button-active-background-l-delta: #{cv.get-var("active-background-l-delta")};
+$button-color-l: #{cv.get-var("text-strong-l")};
+$button-border-l: #{cv.get-var("border-l")};
+$button-border-l-delta: 0%;
+$button-hover-border-l-delta: #{cv.get-var("hover-border-l-delta")};
+$button-active-border-l-delta: #{cv.get-var("active-border-l-delta")};
+$button-focus-border-l-delta: #{cv.get-var("focus-border-l-delta")};
+$button-outer-shadow-h: 0;
+$button-outer-shadow-s: 0%;
+$button-outer-shadow-l: 20%;
+$button-outer-shadow-a: 0.05;
+
+$button-weight: cv.get-var("weight-medium") !default;
+$button-family: false !default;
+
+$button-border-color: cv.get-var("border") !default;
+$button-border-style: solid !default;
+$button-border-width: cv.get-var("control-border-width") !default;
+
 $button-padding-vertical: 0.5em !default;
 $button-padding-horizontal: 1em !default;
-$button-rounded-padding-offset: 0.25em !default;
+$button-rounded-padding-horizontal-offset: 0.25em !default;
 
-$button-disabled-opacity: 0.5 !default;
+$button-focus-border-color: cv.get-var("link-focus-border") !default;
+$button-focus-box-shadow-size: 0 0 0 0.125em !default;
+$button-focus-box-shadow-color: hsla(
+  #{cv.get-var("link-h")},
+  #{cv.get-var("link-s")},
+  #{cv.get-var("link-on-scheme-l")},
+  0.25
+) !default;
+
+$button-active-color: cv.get-var("link-active") !default;
+$button-active-border-color: cv.get-var("link-active-border") !default;
+
+$button-text-color: cv.get-var("text") !default;
+$button-text-decoration: underline !default;
+$button-text-hover-background-color: cv.get-var("background") !default;
+$button-text-hover-color: cv.get-var("text-strong") !default;
+
+$button-ghost-background: none !default;
+$button-ghost-border-color: transparent !default;
+$button-ghost-color: cv.get-var("link-text") !default;
+$button-ghost-decoration: none !default;
+$button-ghost-hover-color: cv.get-var("link") !default;
+$button-ghost-hover-decoration: underline !default;
+
+$button-disabled-background-color: cv.get-var("scheme-main") !default;
+$button-disabled-border-color: cv.get-var("border") !default;
 $button-disabled-shadow: none !default;
+$button-disabled-opacity: 0.5 !default;
 
+$button-static-color: cv.get-var("text-weak") !default;
+$button-static-background-color: cv.get-var("scheme-main-ter") !default;
+$button-static-border-color: cv.get-var("border") !default;
+
+$button-colors: rv.$colors !default;
 $button-responsive-sizes: (
   "mobile": (
-    "small": calc(#{cv.getVar("size-small")} * 0.75),
-    "normal": calc(#{cv.getVar("size-small")} * 0.875),
-    "medium": cv.getVar("size-small"),
-    "large": cv.getVar("size-normal"),
+    "small": calc(#{cv.get-var("size-small")} * 0.75),
+    "normal": calc(#{cv.get-var("size-small")} * 0.875),
+    "medium": cv.get-var("size-small"),
+    "large": cv.get-var("size-normal"),
   ),
   "tablet-only": (
-    "small": calc(#{cv.getVar("size-small")} * 0.875),
-    "normal": cv.getVar("size-small"),
-    "medium": cv.getVar("size-normal"),
-    "large": cv.getVar("size-medium"),
+    "small": calc(#{cv.get-var("size-small")} * 0.875),
+    "normal": cv.get-var("size-small"),
+    "medium": cv.get-var("size-normal"),
+    "large": cv.get-var("size-medium"),
   ),
 ) !default;
 
-// === Base Button Styles ===
+$no-palette: ("white", "black", "light", "dark");
+
 .#{dv.$class-prefix}button {
+  @include cv.register-vars(
+    (
+      "button-family": #{$button-family},
+      "button-weight": #{$button-weight},
+      "button-border-color": #{$button-border-color},
+      "button-border-style": #{$button-border-style},
+      "button-border-width": #{$button-border-width},
+      "button-padding-vertical": #{$button-padding-vertical},
+      "button-padding-horizontal": #{$button-padding-horizontal},
+      "button-focus-border-color": #{$button-focus-border-color},
+      "button-focus-box-shadow-size": #{$button-focus-box-shadow-size},
+      "button-focus-box-shadow-color": #{$button-focus-box-shadow-color},
+      "button-active-color": #{$button-active-color},
+      "button-active-border-color": #{$button-active-border-color},
+      "button-text-color": #{$button-text-color},
+      "button-text-decoration": #{$button-text-decoration},
+      "button-text-hover-background-color": #{$button-text-hover-background-color},
+      "button-text-hover-color": #{$button-text-hover-color},
+      "button-ghost-background": #{$button-ghost-background},
+      "button-ghost-border-color": #{$button-ghost-border-color},
+      "button-ghost-color": #{$button-ghost-color},
+      "button-ghost-decoration": #{$button-ghost-decoration},
+      "button-ghost-hover-color": #{$button-ghost-hover-color},
+      "button-ghost-hover-decoration": #{$button-ghost-hover-decoration},
+      "button-disabled-background-color": #{$button-disabled-background-color},
+      "button-disabled-border-color": #{$button-disabled-border-color},
+      "button-disabled-shadow": #{$button-disabled-shadow},
+      "button-disabled-opacity": #{$button-disabled-opacity},
+      "button-static-color": #{$button-static-color},
+      "button-static-background-color": #{$button-static-background-color},
+      "button-static-border-color": #{$button-static-border-color},
+    )
+  );
+}
+
+.#{dv.$class-prefix}button {
+  @include cv.register-vars(
+    (
+      "button-h": #{$button-h},
+      "button-s": #{$button-s},
+      "button-l": #{$button-l},
+      "button-background-l": #{$button-background-l},
+      "button-background-l-delta": #{$button-background-l-delta},
+      "button-hover-background-l-delta": #{$button-hover-background-l-delta},
+      "button-active-background-l-delta": #{$button-active-background-l-delta},
+      "button-color-l": #{$button-color-l},
+      "button-border-l": #{$button-border-l},
+      "button-border-l-delta": #{$button-border-l-delta},
+      "button-hover-border-l-delta": #{$button-hover-border-l-delta},
+      "button-active-border-l-delta": #{$button-active-border-l-delta},
+      "button-focus-border-l-delta": #{$button-focus-border-l-delta},
+      "button-outer-shadow-h": #{$button-outer-shadow-h},
+      "button-outer-shadow-s": #{$button-outer-shadow-s},
+      "button-outer-shadow-l": #{$button-outer-shadow-l},
+      "button-outer-shadow-a": #{$button-outer-shadow-a},
+      "loading-color":
+        hsl(
+          #{cv.get-var("button-h")},
+          #{cv.get-var("button-s")},
+          #{cv.get-var("button-color-l")}
+        ),
+    )
+  );
+
   @extend %control;
   @extend %unselectable;
 
-  // Base styles
   background-color: hsl(
-    #{cv.getVar("button-h")},
-    #{cv.getVar("button-s")},
-    #{cv.getVar("button-l")}
+    #{cv.get-var("button-h")},
+    #{cv.get-var("button-s")},
+    calc(
+      #{cv.get-var("button-background-l")} + #{cv.get-var(
+          "button-background-l-delta"
+        )}
+    )
   );
-  border: cv.getVar("button-border-width") solid
-    hsl(
-      #{cv.getVar("button-h")},
-      #{cv.getVar("button-s")},
-      #{cv.getVar("button-border-l")}
-    );
-  box-shadow: 0px 0.0625em 0.125em
-    hsla(
-      #{cv.getVar("button-outer-shadow-h")},
-      #{cv.getVar("button-outer-shadow-s")},
-      #{cv.getVar("button-outer-shadow-l")},
-      #{cv.getVar("button-outer-shadow-a")}
-    );
+  border-color: hsl(
+    #{cv.get-var("button-h")},
+    #{cv.get-var("button-s")},
+    calc(
+      #{cv.get-var("button-border-l")} + #{cv.get-var("button-border-l-delta")}
+    )
+  );
+  border-style: cv.get-var("button-border-style");
+  border-width: cv.get-var("button-border-width");
+  box-shadow:
+    0px 0.0625em 0.125em
+      hsla(
+        cv.get-var("button-outer-shadow-h"),
+        cv.get-var("button-outer-shadow-s"),
+        cv.get-var("button-outer-shadow-l"),
+        cv.get-var("button-outer-shadow-a")
+      ),
+    0px 0.125em 0.25em
+      hsla(
+        cv.get-var("button-outer-shadow-h"),
+        cv.get-var("button-outer-shadow-s"),
+        cv.get-var("button-outer-shadow-l"),
+        cv.get-var("button-outer-shadow-a")
+      );
   color: hsl(
-    #{cv.getVar("button-h")},
-    #{cv.getVar("button-s")},
-    #{cv.getVar("button-color-l")}
+    #{cv.get-var("button-h")},
+    #{cv.get-var("button-s")},
+    #{cv.get-var("button-color-l")}
   );
   cursor: pointer;
-  font-weight: cv.getVar("button-weight");
+  font-weight: cv.get-var("button-weight");
+  height: auto;
+  justify-content: center;
+  padding-bottom: calc(
+    #{cv.get-var("button-padding-vertical")} - #{cv.get-var(
+        "button-border-width"
+      )}
+  );
+  padding-left: calc(
+    #{cv.get-var("button-padding-horizontal")} - #{cv.get-var(
+        "button-border-width"
+      )}
+  );
+  padding-right: calc(
+    #{cv.get-var("button-padding-horizontal")} - #{cv.get-var(
+        "button-border-width"
+      )}
+  );
+  padding-top: calc(
+    #{cv.get-var("button-padding-vertical")} - #{cv.get-var(
+        "button-border-width"
+      )}
+  );
   text-align: center;
   white-space: nowrap;
-  padding: #{cv.getVar("button-padding-vertical")} #{cv.getVar(
-      "button-padding-horizontal"
-    )};
 
-  // Responsive font sizes
-  @each $bp-name, $bp-sizes in $button-responsive-sizes {
-    @include mx.responsive($bp-name) {
-      @each $size, $value in $bp-sizes {
-        &.#{dv.$class-prefix}is-responsive.#{dv.$class-prefix}is-#{$size} {
-          font-size: $value;
+  @if $button-family {
+    font-family: cv.get-var("button-family");
+  }
+
+  strong {
+    color: inherit;
+  }
+
+  .#{dv.$class-prefix}icon {
+    &,
+    &.#{dv.$class-prefix}is-small,
+    &.#{dv.$class-prefix}is-medium,
+    &.#{dv.$class-prefix}is-large {
+      height: 1.5em;
+      width: 1.5em;
+    }
+
+    &:first-child:not(:last-child) {
+      margin-inline-start: calc(
+        -0.5 * #{cv.get-var("button-padding-horizontal")}
+      );
+      margin-inline-end: calc(#{cv.get-var("button-padding-horizontal")} * 0.25);
+    }
+
+    &:last-child:not(:first-child) {
+      margin-inline-start: calc(
+        #{cv.get-var("button-padding-horizontal")} * 0.25
+      );
+      margin-inline-end: calc(-0.5 * #{cv.get-var("button-padding-horizontal")});
+    }
+
+    &:first-child:last-child {
+      margin-inline-start: calc(
+        -0.5 * #{cv.get-var("button-padding-horizontal")}
+      );
+      margin-inline-end: calc(-0.5 * #{cv.get-var("button-padding-horizontal")});
+    }
+  }
+
+  // States
+  &:hover,
+  &.#{dv.$class-prefix}is-hovered {
+    @include cv.register-vars(
+      (
+        "button-background-l-delta": #{cv.get-var(
+            "button-hover-background-l-delta"
+          )},
+        "button-border-l-delta": #{cv.get-var("button-hover-border-l-delta")},
+      )
+    );
+  }
+
+  &:focus-visible,
+  &.#{dv.$class-prefix}is-focused {
+    @include cv.register-var("button-border-width", 1px);
+
+    border-color: hsl(
+      #{cv.get-var("focus-h")},
+      #{cv.get-var("focus-s")},
+      #{cv.get-var("focus-l")}
+    );
+    box-shadow: cv.get-var("focus-shadow-size")
+      hsla(
+        cv.get-var("focus-h"),
+        cv.get-var("focus-s"),
+        cv.get-var("focus-l"),
+        cv.get-var("focus-shadow-alpha")
+      );
+  }
+
+  &:active,
+  &.#{dv.$class-prefix}is-active {
+    @include cv.register-vars(
+      (
+        "button-background-l-delta": #{cv.get-var(
+            "button-active-background-l-delta"
+          )},
+        "button-border-l-delta": #{cv.get-var("button-active-border-l-delta")},
+        "button-outer-shadow-a": 0,
+      )
+    );
+  }
+
+  &[disabled],
+  fieldset[disabled] & {
+    background-color: cv.get-var("button-disabled-background-color");
+    border-color: cv.get-var("button-disabled-border-color");
+    box-shadow: cv.get-var("button-disabled-shadow");
+    opacity: cv.get-var("button-disabled-opacity");
+  }
+
+  // Colors
+  @each $name, $pair in $button-colors {
+    &.#{dv.$class-prefix}is-#{$name} {
+      @include cv.register-vars(
+        (
+          "button-h": #{cv.get-var($name, "", "-h")},
+          "button-s": #{cv.get-var($name, "", "-s")},
+          "button-l": #{cv.get-var($name, "", "-l")},
+          "button-background-l": #{cv.get-var($name, "", "-l")},
+          "button-border-l": #{cv.get-var($name, "", "-l")},
+          "button-border-width": 0px,
+          "button-color-l": #{cv.get-var($name, "", "-invert-l")},
+          "button-outer-shadow-a": 0,
+        )
+      );
+
+      &:focus-visible,
+      &.#{dv.$class-prefix}is-focused {
+        @include cv.register-var("button-border-width", 1px);
+      }
+
+      @if not list.index($no-palette, $name) {
+        &.#{dv.$class-prefix}is-light {
+          @include cv.register-vars(
+            (
+              "button-background-l": #{cv.get-var("light-l")},
+              "button-color-l": #{cv.get-var($name, "", "-light-invert-l")},
+            )
+          );
         }
+
+        &.#{dv.$class-prefix}is-dark {
+          @include cv.register-vars(
+            (
+              "button-background-l": #{cv.get-var("dark-l")},
+              "button-color-l": #{cv.get-var($name, "", "-dark-invert-l")},
+            )
+          );
+        }
+      }
+
+      &.#{dv.$class-prefix}is-soft {
+        @include cv.register-vars(
+          (
+            "button-background-l": #{cv.get-var("soft-l")},
+            "button-color-l": #{cv.get-var("soft-invert-l")},
+          )
+        );
+      }
+
+      &.#{dv.$class-prefix}is-bold {
+        @include cv.register-vars(
+          (
+            "button-background-l": #{cv.get-var("bold-l")},
+            "button-color-l": #{cv.get-var("bold-invert-l")},
+          )
+        );
+      }
+
+      &[disabled],
+      fieldset[disabled] & {
+        background-color: cv.get-var($name);
+        border-color: cv.get-var($name);
+        box-shadow: none;
       }
     }
   }
 
-  // Hover state
-  &:hover,
-  &.#{dv.$class-prefix}is-hovered {
-    background-color: hsl(
-      #{cv.getVar("button-h")},
-      #{cv.getVar("button-s")},
-      calc(
-        #{cv.getVar("button-l")} + #{cv.getVar(
-            "button-hover-background-l-delta"
-          )}
+  // Styles
+  &.#{dv.$class-prefix}is-outlined {
+    @include cv.register-vars(
+      (
+        "button-border-width": max(1px, 0.0625em),
       )
     );
-    border-color: hsl(
-      #{cv.getVar("button-h")},
-      #{cv.getVar("button-s")},
-      calc(
-        #{cv.getVar("button-border-l")} + #{cv.getVar(
-            "button-hover-border-l-delta"
-          )}
-      )
-    );
-  }
 
-  // Focus state
-  &:focus-visible,
-  &.#{dv.$class-prefix}is-focused {
+    background-color: transparent;
     border-color: hsl(
-      #{cv.getVar("focus-h")},
-      #{cv.getVar("focus-s")},
-      #{cv.getVar("focus-l")}
+      #{cv.get-var("button-h")},
+      #{cv.get-var("button-s")},
+      #{cv.get-var("button-l")}
     );
-    box-shadow: cv.getVar("focus-shadow-size")
-      hsla(
-        #{cv.getVar("focus-h")},
-        #{cv.getVar("focus-s")},
-        #{cv.getVar("focus-l")},
-        #{cv.getVar("focus-shadow-alpha")}
+    color: hsl(
+      #{cv.get-var("button-h")},
+      #{cv.get-var("button-s")},
+      #{cv.get-var("button-l")}
+    );
+
+    &:hover {
+      @include cv.register-vars(
+        (
+          "button-border-width": max(2px, 0.125em),
+          "button-outer-shadow-alpha": 1,
+        )
       );
+    }
+
+    &:active {
+      @include cv.register-vars(());
+    }
+
+    &[disabled],
+    fieldset[disabled] & {
+      background-color: transparent;
+      box-shadow: none;
+    }
   }
 
-  // Disabled state
-  &[disabled],
-  fieldset[disabled] & {
-    background-color: cv.getVar("button-disabled-background-color");
-    border-color: cv.getVar("button-disabled-border-color");
-    opacity: $button-disabled-opacity;
-    box-shadow: $button-disabled-shadow;
-    pointer-events: none;
+  &.#{dv.$class-prefix}is-inverted {
+    background-color: hsl(
+      #{cv.get-var("button-h")},
+      #{cv.get-var("button-s")},
+      calc(
+        #{cv.get-var("button-color-l")} + #{cv.get-var(
+            "button-background-l-delta"
+          )}
+      )
+    );
+    color: hsl(
+      #{cv.get-var("button-h")},
+      #{cv.get-var("button-s")},
+      #{cv.get-var("button-background-l")}
+    );
   }
 
-  // Rounded modifier
-  &.#{dv.$class-prefix}is-rounded {
-    border-radius: cv.getVar("radius-rounded");
-    padding: #{cv.getVar("button-padding-vertical")} calc(#{cv.getVar(
-            "button-padding-horizontal"
-          )} + #{$button-rounded-padding-offset});
+  &.#{dv.$class-prefix}is-text {
+    background-color: transparent;
+    border-color: transparent;
+    color: cv.get-var("button-text-color");
+    text-decoration: cv.get-var("button-text-decoration");
+
+    &:hover,
+    &.#{dv.$class-prefix}is-hovered {
+      background-color: cv.get-var("button-text-hover-background-color");
+      color: cv.get-var("button-text-hover-color");
+    }
+
+    &:active,
+    &.#{dv.$class-prefix}is-active {
+      // background-color: bulmaDarken($button-text-hover-background-color, 5%);
+      color: cv.get-var("button-text-hover-color");
+    }
+
+    &[disabled],
+    fieldset[disabled] & {
+      background-color: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+  }
+
+  &.#{dv.$class-prefix}is-ghost {
+    background: cv.get-var("button-ghost-background");
+    border-color: cv.get-var("button-ghost-border-color");
+    box-shadow: none;
+    color: cv.get-var("button-ghost-color");
+    text-decoration: cv.get-var("button-ghost-decoration");
+
+    &:hover,
+    &.#{dv.$class-prefix}is-hovered {
+      color: cv.get-var("button-ghost-hover-color");
+      text-decoration: cv.get-var("button-ghost-hover-decoration");
+    }
   }
 
   // Sizes
-  @each $size in ("small", "normal", "medium", "large") {
-    &.#{dv.$class-prefix}is-#{$size} {
-      font-size: cv.getVar("size-#{$size}");
-      border-radius: cv.getVar("radius-#{$size}");
+  &.#{dv.$class-prefix}is-small {
+    @include cv.register-vars(
+      (
+        "control-size": #{cv.get-var("size-small")},
+        "control-radius": #{cv.get-var("radius-small")},
+      )
+    );
+  }
+
+  &.#{dv.$class-prefix}is-normal {
+    @include cv.register-vars(
+      (
+        "control-size": #{cv.get-var("size-normal")},
+        "control-radius": #{cv.get-var("radius")},
+      )
+    );
+  }
+
+  &.#{dv.$class-prefix}is-medium {
+    @include cv.register-vars(
+      (
+        "control-size": #{cv.get-var("size-medium")},
+        "control-radius": #{cv.get-var("radius-medium")},
+      )
+    );
+  }
+
+  &.#{dv.$class-prefix}is-large {
+    @include cv.register-vars(
+      (
+        "control-size": #{cv.get-var("size-large")},
+        "control-radius": #{cv.get-var("radius-medium")},
+      )
+    );
+  }
+
+  // Modifiers
+  &.#{dv.$class-prefix}is-fullwidth {
+    display: flex;
+    width: 100%;
+  }
+
+  &.#{dv.$class-prefix}is-loading {
+    box-shadow: none;
+    color: transparent !important;
+    pointer-events: none;
+
+    &::after {
+      @extend %loader;
+      @include mx.center(1em);
+      position: absolute !important;
     }
+  }
+
+  &.#{dv.$class-prefix}is-static {
+    background-color: cv.get-var("button-static-background-color");
+    border-color: cv.get-var("button-static-border-color");
+    color: cv.get-var("button-static-color");
+    box-shadow: none;
+    pointer-events: none;
+  }
+
+  &.#{dv.$class-prefix}is-rounded {
+    border-radius: cv.get-var("radius-rounded");
+    padding-left: calc(
+      #{cv.get-var("button-padding-horizontal")} + #{$button-rounded-padding-horizontal-offset} -
+        #{cv.get-var("button-border-width")}
+    );
+    padding-right: calc(
+      #{cv.get-var("button-padding-horizontal")} + #{$button-rounded-padding-horizontal-offset} -
+        #{cv.get-var("button-border-width")}
+    );
   }
 }
 
-// === Button Group Styles ===
 .#{dv.$class-prefix}buttons {
+  @extend %block;
+  align-items: center;
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+  justify-content: flex-start;
 
+  // Sizes
   &.#{dv.$class-prefix}are-small {
-    font-size: cv.getVar("size-small");
+    @include cv.register-vars(
+      (
+        "control-size": #{cv.get-var("size-small")},
+        "control-radius": #{cv.get-var("radius-small")},
+      )
+    );
   }
 
   &.#{dv.$class-prefix}are-medium {
-    font-size: cv.getVar("size-medium");
+    @include cv.register-vars(
+      (
+        "control-size": #{cv.get-var("size-medium")},
+        "control-radius": #{cv.get-var("radius-medium")},
+      )
+    );
   }
 
   &.#{dv.$class-prefix}are-large {
-    font-size: cv.getVar("size-large");
+    @include cv.register-vars(
+      (
+        "control-size": #{cv.get-var("size-large")},
+        "control-radius": #{cv.get-var("radius-large")},
+      )
+    );
   }
 
   &.#{dv.$class-prefix}has-addons {
+    gap: 0;
+
     .#{dv.$class-prefix}button {
       &:not(:first-child) {
+        border-end-start-radius: 0;
         border-start-start-radius: 0;
-        margin-left: -1px;
       }
 
       &:not(:last-child) {
         border-end-end-radius: 0;
+        border-start-end-radius: 0;
+        margin-inline-end: -1px;
+      }
+
+      &:hover,
+      &.#{dv.$class-prefix}is-hovered {
+        z-index: 2;
+      }
+
+      &:focus,
+      &.#{dv.$class-prefix}is-focused,
+      &:active,
+      &.#{dv.$class-prefix}is-active,
+      &.#{dv.$class-prefix}is-selected {
+        z-index: 3;
+
+        &:hover {
+          z-index: 4;
+        }
+      }
+
+      &.#{dv.$class-prefix}is-expanded {
+        flex-grow: 1;
+        flex-shrink: 1;
+      }
+    }
+  }
+
+  &.#{dv.$class-prefix}is-centered {
+    justify-content: center;
+  }
+
+  &.#{dv.$class-prefix}is-right {
+    justify-content: flex-end;
+  }
+}
+
+@each $bp-name, $bp-sizes in $button-responsive-sizes {
+  @include mx.breakpoint($bp-name) {
+    @each $size, $value in $bp-sizes {
+      @if $size != "normal" {
+        .#{dv.$class-prefix}button.#{dv.$class-prefix}is-responsive.#{dv.$class-prefix}is-#{$size} {
+          font-size: $value;
+        }
+      } @else {
+        .#{dv.$class-prefix}button.#{dv.$class-prefix}is-responsive,
+        .#{dv.$class-prefix}button.#{dv.$class-prefix}is-responsive.#{dv.$class-prefix}is-normal {
+          font-size: $value;
+        }
       }
     }
   }

@@ -3,7 +3,7 @@
 @use "../utilities/extends";
 @use "../utilities/mixins" as mx;
 
-$bar-item-spacing: calc(#{cv.getVar("block-spacing")} * 0.5) !default;
+$bar-item-spacing: calc(#{cv.get-var("block-spacing")} * 0.5) !default;
 
 .#{dv.$class-prefix}bar {
   @extend %block;
@@ -13,10 +13,10 @@ $bar-item-spacing: calc(#{cv.getVar("block-spacing")} * 0.5) !default;
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
-  gap: cv.getVar("bar-item-spacing");
+  gap: cv.get-var("bar-item-spacing");
 
   code {
-    border-radius: cv.getVar("radius");
+    border-radius: cv.get-var("radius");
   }
 
   img {

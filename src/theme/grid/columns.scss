@@ -7,16 +7,16 @@
 
 // Base Columns Logic
 .#{dv.$class-prefix}columns {
-    margin-inline-start: calc(-1 * #{cv.getVar("column-gap")});
-    margin-inline-end: calc(-1 * #{cv.getVar("column-gap")});
-    margin-top: calc(-1 * #{cv.getVar("column-gap")});
+    margin-inline-start: calc(-1 * #{cv.get-var("column-gap")});
+    margin-inline-end: calc(-1 * #{cv.get-var("column-gap")});
+    margin-top: calc(-1 * #{cv.get-var("column-gap")});
   
     &:last-child {
-      margin-bottom: calc(-1 * #{cv.getVar("column-gap")});
+      margin-bottom: calc(-1 * #{cv.get-var("column-gap")});
     }
   
     &:not(:last-child) {
-      margin-bottom: calc(#{cv.getVar("block-spacing")} - #{cv.getVar("column-gap")});
+      margin-bottom: calc(#{cv.get-var("block-spacing")} - #{cv.get-var("column-gap")});
     }
   
     // Modifiers

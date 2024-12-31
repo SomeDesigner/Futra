@@ -4,9 +4,9 @@
 @use "../utilities/mixins" as mx;
 
 $media-border-color: hsla(
-  #{cv.getVar("scheme-h")},
-  #{cv.getVar("scheme-s")},
-  #{cv.getVar("border-l")},
+  #{cv.get-var("scheme-h")},
+  #{cv.get-var("scheme-s")},
+  #{cv.get-var("border-l")},
   0.5
 ) !default;
 $media-border-size: 1px !default;
@@ -35,39 +35,39 @@ $media-level-2-spacing: 0.5rem !default;
   text-align: inherit;
 
   .#{dv.$class-prefix}content:not(:last-child) {
-    margin-bottom: cv.getVar("media-content-spacing");
+    margin-bottom: cv.get-var("media-content-spacing");
   }
 
   .#{dv.$class-prefix}media {
-    border-top: cv.getVar("media-border-size") solid cv.getVar("media-border-color");
+    border-top: cv.get-var("media-border-size") solid cv.get-var("media-border-color");
     display: flex;
-    padding-top: cv.getVar("media-level-1-spacing");
+    padding-top: cv.get-var("media-level-1-spacing");
 
     .#{dv.$class-prefix}content:not(:last-child),
     .#{dv.$class-prefix}control:not(:last-child) {
-      margin-bottom: cv.getVar("media-level-1-content-spacing");
+      margin-bottom: cv.get-var("media-level-1-content-spacing");
     }
 
     .#{dv.$class-prefix}media {
-      padding-top: cv.getVar("media-level-2-spacing");
+      padding-top: cv.get-var("media-level-2-spacing");
 
       & + .#{dv.$class-prefix}media {
-        margin-top: cv.getVar("media-level-2-spacing");
+        margin-top: cv.get-var("media-level-2-spacing");
       }
     }
   }
 
   & + .#{dv.$class-prefix}media {
-    border-top: cv.getVar("media-border-size") solid cv.getVar("media-border-color");
-    margin-top: cv.getVar("media-spacing");
-    padding-top: cv.getVar("media-spacing");
+    border-top: cv.get-var("media-border-size") solid cv.get-var("media-border-color");
+    margin-top: cv.get-var("media-spacing");
+    padding-top: cv.get-var("media-spacing");
   }
 
   // Sizes
   &.#{dv.$class-prefix}is-large {
     & + .#{dv.$class-prefix}media {
-      margin-top: cv.getVar("media-spacing-large");
-      padding-top: cv.getVar("media-spacing-large");
+      margin-top: cv.get-var("media-spacing-large");
+      padding-top: cv.get-var("media-spacing-large");
     }
   }
 }
@@ -78,11 +78,11 @@ $media-level-2-spacing: 0.5rem !default;
 }
 
 .#{dv.$class-prefix}media-left {
-  margin-inline-end: cv.getVar("media-spacing");
+  margin-inline-end: cv.get-var("media-spacing");
 }
 
 .#{dv.$class-prefix}media-right {
-  margin-inline-start: cv.getVar("media-spacing");
+  margin-inline-start: cv.get-var("media-spacing");
 }
 
 .#{dv.$class-prefix}media-content {

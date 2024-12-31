@@ -1,249 +1,470 @@
 @use "sass:map";
-@use "default-variables" as dv;
-@use "css-variables" as cv;
+@use "sass:color";
+@use "sass:math";
+@use "../utilities/default-variables" as dv;
+@use "../utilities/css-variables" as cv;
 
-// Arrow
-@mixin arrow($color: #{cv.getVar("arrow-color")}) {
-    border: 0.125em solid $color;
-    border-right: 0;
-    border-top: 0;
+/// Arrow mixin
+@mixin arrow($color: #{cv.get-var("arrow-color")}) {
+  border: 0.125em solid $color;
+  border-right: 0;
+  border-top: 0;
+  content: "";
+  display: block;
+  height: 0.625em;
+  margin-top: -0.4375em;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  transition-duration: cv.get-var("duration");
+  transition-property: border-color;
+  width: 0.625em;
+}
+
+@mixin roundedCorners($radius) {
+  border-radius: math.div($radius, 1);
+}
+
+/// Block spacing mixin
+@mixin block($spacing: cv.get-var("block-spacing")) {
+  &:not(:last-child) {
+    margin-bottom: $spacing;
+  }
+}
+
+/// Center element mixin
+@mixin center($width: auto, $height: auto) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  @if $width != auto {
+    width: $width;
+  }
+  @if $height != auto {
+    height: $height;
+  }
+}
+
+/// Clearfix mixin
+@mixin clearfix {
+  &::after {
+    clear: both;
     content: "";
-    display: block;
-    height: 0.625em;
-    width: 0.625em;
-    margin-top: -0.4375em;
-    pointer-events: none;
-    position: absolute;
-    top: 50%;
-    transform: rotate(-45deg);
-    transform-origin: center;
-    transition: border-color #{cv.getVar("duration")} ease;
+    display: table;
   }
-  
-  // Block
-  @mixin block($spacing: cv.getVar("block-spacing")) {
-    &:not(:last-child) {
-      margin-bottom: $spacing;
-    }
+}
+
+// Mixin: From (min-width)
+@mixin from($device) {
+  @media screen and (min-width: $device) {
+    @content;
   }
-  
-  // Center
-  @mixin center($width, $height: 0) {
-    position: absolute;
-    $calculated-height: if($height != 0, $height, $width);
-  
-    left: calc(50% - (#{$width} * 0.5));
-    top: calc(50% - (#{$calculated-height} * 0.5));
+}
+
+// Mixin: Until (max-width)
+@mixin until($device) {
+  @media screen and (max-width: calc(#{$device} - 1px)) {
+    @content;
   }
-  
-  // Clearfix
-  @mixin clearfix {
-    &::after {
-      clear: both;
-      content: "";
-      display: table;
-    }
+}
+
+// Mixin: Between (min-width and max-width)
+@mixin between($from, $until) {
+  @media screen and (min-width: $from) and (max-width: calc(#{$until} - 1px)) {
+    @content;
   }
-  
-  // Delete Button
-  @mixin delete {
-    @include cv.register-vars((
-      "delete-dimensions": 1.25rem,
-      "delete-background-l": 0%,
-      "delete-background-alpha": 0.5,
-      "delete-color": #{cv.getVar("white")}
-    ));
-  
-    appearance: none;
-    background-color: hsla(
-      #{cv.getVar("scheme-h")},
-      #{cv.getVar("scheme-s")},
-      #{cv.getVar("delete-background-l")},
-      #{cv.getVar("delete-background-alpha")}
-    );
-    border: none;
-    border-radius: cv.getVar("radius-rounded");
-    cursor: pointer;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1em;
-    height: cv.getVar("delete-dimensions");
-    width: cv.getVar("delete-dimensions");
-    outline: none;
-  
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      background-color: cv.getVar("delete-color");
-      transform: translate(-50%, -50%) rotate(45deg);
-      transform-origin: center;
-    }
-  
-    &::before {
-      height: 2px;
-      width: 50%;
-    }
-  
-    &::after {
-      width: 2px;
-      height: 50%;
-    }
-  
-    &:hover,
-    &:focus {
-      @include cv.register-var("delete-background-alpha", 0.4);
-    }
-  
-    &:active {
-      @include cv.register-var("delete-background-alpha", 0.5);
-    }
-  
-    @each $size, $dimensions in ("small": 1rem, "medium": 1.5rem, "large": 2rem) {
-      &.#{dv.$class-prefix}is-#{$size} {
-        @include cv.register-var("delete-dimensions", $dimensions);
-      }
+}
+
+// Mixin: Mobile
+@mixin mobile {
+  @media screen and (max-width: calc(#{dv.$tablet} - 1px)) {
+    @content;
+  }
+}
+
+// Mixin: Tablet
+@mixin tablet {
+  @media screen and (min-width: dv.$tablet), print {
+    @content;
+  }
+}
+
+// Mixin: Tablet-Only
+@mixin tablet-only {
+  @media screen and (min-width: dv.$tablet) and (max-width: calc(#{dv.$desktop} - 1px)) {
+    @content;
+  }
+}
+
+// Mixin: Touch
+@mixin touch {
+  @media screen and (max-width: calc(#{dv.$desktop} - 1px)) {
+    @content;
+  }
+}
+
+// Mixin: Desktop
+@mixin desktop {
+  @media screen and (min-width: dv.$desktop) {
+    @content;
+  }
+}
+
+// Mixin: Desktop-Only
+@mixin desktop-only {
+  @if dv.$widescreen-enabled {
+    @media screen and (min-width: dv.$desktop) and (max-width: calc(#{dv.$widescreen} - 1px)) {
+      @content;
     }
   }
-  
-  // FontAwesome-like
-  @mixin fa($size, $dimensions) {
-    display: inline-block;
-    font-size: $size;
-    height: $dimensions;
-    width: $dimensions;
-    text-align: center;
-    line-height: $dimensions;
-    vertical-align: top;
-  }
-  
-  // Burger Menu
-  @mixin burger($dimensions) {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    appearance: none;
-    background: none;
-    border: none;
-    border-radius: cv.getVar("burger-border-radius");
-    color: hsl(cv.getVar("burger-h"), cv.getVar("burger-s"), cv.getVar("burger-l"));
-    cursor: pointer;
-    height: $dimensions;
-    width: $dimensions;
-  
-    span {
-      position: absolute;
-      left: 50%;
-      background-color: currentColor;
-      width: cv.getVar("burger-item-width");
-      height: cv.getVar("burger-item-height");
-      transition: background-color, color, opacity, transform #{cv.getVar("duration")} #{cv.getVar("easing")};
-      transform-origin: center;
-  
-      &:nth-child(1) {
-        top: calc(50% - #{cv.getVar("burger-item-height")} / 2);
-      }
-      &:nth-child(2) {
-        bottom: calc(50% + #{cv.getVar("burger-gap")});
-      }
-      &:nth-child(3) {
-        top: calc(50% + #{cv.getVar("burger-gap")});
-      }
-    }
-  
-    &:hover {
-      background-color: hsla(cv.getVar("burger-h"), cv.getVar("burger-s"), cv.getVar("burger-l"), 0.1);
-    }
-  
-    &:active {
-      background-color: hsla(cv.getVar("burger-h"), cv.getVar("burger-s"), cv.getVar("burger-l"), 0.2);
-    }
-  
-    &.#{dv.$class-prefix}is-active span {
-      &:nth-child(1) { transform: rotate(-45deg); }
-      &:nth-child(2) { transform: rotate(45deg); }
-      &:nth-child(3), &:nth-child(4) { opacity: 0; }
+}
+
+// Mixin: Until-Widescreen
+@mixin until-widescreen {
+  @if dv.$widescreen-enabled {
+    @media screen and (max-width: calc(#{dv.$widescreen} - 1px)) {
+      @content;
     }
   }
-  
-  // Placeholder
-  @mixin placeholder {
-    @each $vendor in ("-moz", "-webkit-input", "-ms-input", ":-webkit") {
-      &:#{$vendor}-placeholder {
+}
+
+// Mixin: Widescreen
+@mixin widescreen {
+  @if dv.$widescreen-enabled {
+    @media screen and (min-width: dv.$widescreen) {
+      @content;
+    }
+  }
+}
+
+// Mixin: Widescreen-Only
+@mixin widescreen-only {
+  @if dv.$widescreen-enabled and dv.$fullhd-enabled {
+    @media screen and (min-width: dv.$widescreen) and (max-width: calc(#{dv.$fullhd} - 1px)) {
+      @content;
+    }
+  }
+}
+
+// Mixin: Until-FullHD
+@mixin until-fullhd {
+  @if dv.$fullhd-enabled {
+    @media screen and (max-width: calc(#{dv.$fullhd} - 1px)) {
+      @content;
+    }
+  }
+}
+
+// Mixin: FullHDs
+@mixin fullhd {
+  @if dv.$fullhd-enabled {
+    @media screen and (min-width: dv.$fullhd) {
+      @content;
+    }
+  }
+}
+
+// Mixin: Breakpoint
+@mixin breakpoint($name) {
+  $breakpoint: map.get(dv.$breakpoints, $name);
+
+  @if $breakpoint {
+    $from: map.get($breakpoint, "from");
+    $until: map.get($breakpoint, "until");
+
+    @if $from and $until {
+      @include between($from, $until) {
         @content;
       }
-    }
-  }
-  
-  // Selection
-  @mixin selection($current-selector: false) {
-    @if $current-selector {
-      &::-moz-selection, &::selection {
+    } @else if $from {
+      @include from($from) {
+        @content;
+      }
+    } @else if $until {
+      @include until($until) {
         @content;
       }
     } @else {
-      ::-moz-selection, ::selection {
-        @content;
-      }
+      @error "Breakpoint '#{$name}' must define at least 'from' or 'until'.";
     }
+  } @else {
+    @error "Breakpoint '#{$name}' is not defined in dv.$breakpoints.";
   }
-  
-  // Reset Styles
-  @mixin reset {
-    appearance: none;
-    background: none;
-    border: none;
-    color: inherit;
-    font: inherit;
-    margin: 0;
-    padding: 0;
+}
+
+@mixin container-from($name, $width) {
+  @container #{$name} (min-width: #{$width}) {
+    @content;
   }
-  
-  // Unselectable
-  @mixin unselectable {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+}
+
+@mixin container-until($name, $width) {
+  @container #{$name} (max-width: #{$width - 1px}) {
+    @content;
   }
-  
-  // Responsiveness
-  @mixin responsive($type, $from: null, $until: null) {
-    @if $type == "from" and $from {
-      @media screen and (min-width: $from) {
-        @content;
-      }
-    } @else if $type == "until" and $until {
-      @media screen and (max-width: calc(#{$until} - 1px)) {
-        @content;
-      }
-    } @else if $type == "between" and $from and $until {
-      @media screen and (min-width: $from) and (max-width: calc(#{$until} - 1px)) {
-        @content;
-      }
-    }
+}
+
+// Apply content only if layout is LTR
+@mixin ltr {
+  @if not dv.$rtl {
+    @content;
   }
-  
-  
-  // Overlays
-  @mixin overlay($offset: 0) {
+}
+
+// Apply content only if layout is RTL
+@mixin rtl {
+  @if dv.$rtl {
+    @content;
+  }
+}
+
+// Set directional property based on LTR/RTL
+@mixin ltr-property($property, $value, $is-right: true) {
+  $normal: if($is-right, "right", "left");
+  $opposite: if($is-right, "left", "right");
+
+  @if dv.$rtl {
+    #{$property}-#{$opposite}: $value;
+  } @else {
+    #{$property}-#{$normal}: $value;
+  }
+}
+
+
+/// Delete button mixin
+@mixin delete {
+  @include cv.register-vars(
+    (
+      "delete-dimensions": 1.25rem,
+      "delete-background-l": 0%,
+      "delete-background-alpha": 0.5,
+      "delete-color": #{cv.get-var("white")},
+    )
+  );
+
+  appearance: none;
+  background-color: hsla(
+    #{cv.get-var("scheme-h")},
+    #{cv.get-var("scheme-s")},
+    #{cv.get-var("delete-background-l")},
+    #{cv.get-var("delete-background-alpha")}
+  );
+  border: none;
+  border-radius: cv.get-var("radius-rounded");
+  cursor: pointer;
+  pointer-events: auto;
+  display: inline-flex;
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: cv.get-var("delete-dimensions");
+  width: cv.get-var("delete-dimensions");
+
+  &::before,
+  &::after {
+    background-color: cv.get-var("delete-color");
+    content: "";
+    display: block;
+    left: 50%;
     position: absolute;
-    top: $offset;
-    right: $offset;
-    bottom: $offset;
-    left: $offset;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    transform-origin: center;
   }
-  
-  // Loader
-  @mixin loader {
-    animation: spinAround 500ms infinite linear;
-    border: 2px solid cv.getVar("loading-color");
-    border-top-color: transparent;
-    border-right-color: transparent;
-    border-radius: cv.getVar("radius-rounded");
-    width: 1em;
-    height: 1em;
+
+  &::before {
+    height: 2px;
+    width: 50%;
   }
-  
+
+  &::after {
+    height: 50%;
+    width: 2px;
+  }
+
+  &:hover,
+  &:focus {
+    @include cv.register-var("delete-background-alpha", 0.4);
+  }
+
+  &:active {
+    @include cv.register-var("delete-background-alpha", 0.5);
+  }
+
+  &.#{dv.$class-prefix}is-small {
+    @include cv.register-var("delete-dimensions", 1rem);
+  }
+
+  &.#{dv.$class-prefix}is-medium {
+    @include cv.register-var("delete-dimensions", 1.5rem);
+  }
+
+  &.#{dv.$class-prefix}is-large {
+    @include cv.register-var("delete-dimensions", 2rem);
+  }
+}
+
+@mixin burger($dimensions) {
+  align-items: center;
+  appearance: none;
+  background: none;
+  border: none;
+  border-radius: cv.get-var("burger-border-radius");
+  color: hsl(
+    cv.get-var("burger-h"),
+    cv.get-var("burger-s"),
+    cv.get-var("burger-l")
+  );
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: $dimensions;
+  justify-content: center;
+  position: relative;
+  vertical-align: top;
+  width: $dimensions;
+
+  // Define the burger item styles
+  span {
+    @include burger-item-styles;
+  }
+
+  // Hover state
+  &:hover {
+    background-color: hsla(
+      cv.get-var("burger-h"),
+      cv.get-var("burger-s"),
+      cv.get-var("burger-l"),
+      0.1
+    );
+  }
+
+  // Active state
+  &:active {
+    background-color: hsla(
+      cv.get-var("burger-h"),
+      cv.get-var("burger-s"),
+      cv.get-var("burger-l"),
+      0.2
+    );
+  }
+
+  // Active modifier
+  &.#{dv.$class-prefix}is-active {
+    span {
+      @include burger-active-styles;
+    }
+  }
+}
+
+// Modularized Burger Item Styles
+@mixin burger-item-styles {
+  background-color: currentColor;
+  display: block;
+  height: cv.get-var("burger-item-height");
+  left: calc(50% - calc(#{cv.get-var("burger-item-width")}) / 2);
+  position: absolute;
+  transform-origin: center;
+  transition-duration: cv.get-var("duration");
+  transition-property: background-color, color, opacity, transform;
+  transition-timing-function: cv.get-var("easing");
+  width: cv.get-var("burger-item-width");
+
+  &:nth-child(1),
+  &:nth-child(2) {
+    top: calc(50% - calc(#{cv.get-var("burger-item-height")}) / 2);
+  }
+
+  &:nth-child(3) {
+    bottom: calc(50% + #{cv.get-var("burger-gap")});
+  }
+
+  &:nth-child(4) {
+    top: calc(50% + #{cv.get-var("burger-gap")});
+  }
+}
+
+// Modularized Active State Styles
+@mixin burger-active-styles {
+  &:nth-child(1) {
+    transform: rotate(-45deg);
+  }
+
+  &:nth-child(2) {
+    transform: rotate(45deg);
+  }
+
+  &:nth-child(3),
+  &:nth-child(4) {
+    opacity: 0;
+  }
+}
+
+@mixin reset {
+  appearance: none;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font: inherit; // Combines font-family, font-size, and font-weight
+  color: inherit; // Ensures text inherits color
+  box-sizing: border-box; // Adds box-sizing for more predictable layouts
+}
+
+@mixin selection($current-selector: false) {
+  $prefix: if($current-selector, "&", "");
+
+  #{$prefix}::-moz-selection {
+    @content;
+  }
+  #{$prefix}::selection {
+    @content;
+  }
+}
+
+@mixin unselectable {
+  -webkit-user-select: none; // Webkit-based browsers
+  -moz-user-select: none;    // Mozilla Firefox
+  -ms-user-select: none;     // Deprecated IE/Edge
+  user-select: none;         // Standard
+  -webkit-touch-callout: none; // Disable callout menus on iOS
+}
+
+@mixin placeholder {
+  $placeholders: (
+    ":-moz-placeholder",
+    ":-webkit-input-placeholder",
+    "-ms-input-placeholder"
+  );
+
+  @each $placeholder in $placeholders {
+    &:#{$placeholder} {
+      @content;
+    }
+  }
+}
+
+@mixin overflow-touch($overflow: auto) {
+  overflow: $overflow; // Allows control over the overflow property
+  -webkit-overflow-scrolling: touch; // Enables momentum-based scrolling for touch devices
+}
+
+@mixin loader {
+  animation: spin-around 500ms infinite linear; // Updated animation name
+  border: 2px solid cv.get-var("loading-color");
+  border-radius: 50%; // Simplified border-radius if always circular
+  border-right-color: transparent;
+  border-top-color: transparent;
+  display: block;
+  height: 1em;
+  position: relative;
+  width: 1em;
+}
+
+@mixin overlay($offset: 0) {
+  position: absolute;
+  inset: $offset; // Use the shorthand `inset` property
+}

@@ -43,41 +43,41 @@ $hero-colors: rv.$colors !default;
   @each $name, $pair in $hero-colors {
     &.#{rv.$class-prefix}is-#{$name} {
       @include cv.register-vars((
-        "hero-h": cv.getVar($name, "", "-h"),
-        "hero-s": cv.getVar($name, "", "-s"),
-        "hero-background-l": cv.getVar($name, "", "-l"),
-        "hero-color-l": cv.getVar($name, "", "-invert-l")
+        "hero-h": cv.get-var($name, "", "-h"),
+        "hero-s": cv.get-var($name, "", "-s"),
+        "hero-background-l": cv.get-var($name, "", "-l"),
+        "hero-color-l": cv.get-var($name, "", "-invert-l")
       ));
 
       background-color: hsl(
-        cv.getVar("hero-h"),
-        cv.getVar("hero-s"),
-        cv.getVar("hero-background-l")
+        cv.get-var("hero-h"),
+        cv.get-var("hero-s"),
+        cv.get-var("hero-background-l")
       );
 
       color: hsl(
-        cv.getVar("hero-h"),
-        cv.getVar("hero-s"),
-        cv.getVar("hero-color-l")
+        cv.get-var("hero-h"),
+        cv.get-var("hero-s"),
+        cv.get-var("hero-color-l")
       );
 
       // Bold Modifier
       &.#{rv.$class-prefix}is-bold {
         $gradient: map-merge($hero-gradient-offsets, (
           top-left: hsl(
-            calc(cv.getVar("hero-h") - map-get($hero-gradient-offsets, h)),
-            calc(cv.getVar("hero-s") + map-get($hero-gradient-offsets, s)),
-            calc(cv.getVar("hero-background-l") + map-get($hero-gradient-offsets, l))
+            calc(cv.get-var("hero-h") - map-get($hero-gradient-offsets, h)),
+            calc(cv.get-var("hero-s") + map-get($hero-gradient-offsets, s)),
+            calc(cv.get-var("hero-background-l") + map-get($hero-gradient-offsets, l))
           ),
           middle: hsl(
-            cv.getVar("hero-h"),
-            cv.getVar("hero-s"),
-            cv.getVar("hero-background-l")
+            cv.get-var("hero-h"),
+            cv.get-var("hero-s"),
+            cv.get-var("hero-background-l")
           ),
           bottom-right: hsl(
-            calc(cv.getVar("hero-h") + map-get($hero-gradient-offsets, h)),
-            calc(cv.getVar("hero-s") - map-get($hero-gradient-offsets, s)),
-            calc(cv.getVar("hero-background-l") - map-get($hero-gradient-offsets, l))
+            calc(cv.get-var("hero-h") + map-get($hero-gradient-offsets, h)),
+            calc(cv.get-var("hero-s") - map-get($hero-gradient-offsets, s)),
+            calc(cv.get-var("hero-background-l") - map-get($hero-gradient-offsets, l))
           )
         ));
 
@@ -192,9 +192,9 @@ $hero-colors: rv.$colors !default;
 .#{rv.$class-prefix}hero-body {
   flex-grow: 1;
   flex-shrink: 0;
-  padding: cv.getVar("hero-body-padding");
+  padding: cv.get-var("hero-body-padding");
 
   @include mx.responsive("from", dv.$tablet) {
-    padding: cv.getVar("hero-body-padding-tablet");
+    padding: cv.get-var("hero-body-padding-tablet");
   }
 }

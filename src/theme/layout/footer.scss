@@ -1,7 +1,7 @@
 @use "../utilities/css-variables" as cv;
 @use "../utilities/default-variables" as dv;
 
-$footer-background-color: cv.getVar("scheme-main-ish") !default;
+$footer-background-color: cv.get-var("scheme-main-ish") !default;
 $footer-color: null !default;
 $footer-padding: 3rem 1.5rem 6rem !default;
 
@@ -12,10 +12,10 @@ $footer-padding: 3rem 1.5rem 6rem !default;
     "footer-padding": $footer-padding,
   ));
 
-  background-color: cv.getVar("footer-background-color");
-  padding: cv.getVar("footer-padding");
+  background-color: cv.get-var("footer-background-color");
+  padding: cv.get-var("footer-padding");
 
   @if $footer-color != null {
-    color: cv.getVar("footer-color");
+    color: cv.get-var("footer-color");
   }
 }

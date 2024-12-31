@@ -10,6 +10,6 @@ $radii: (
 
 @each $name, $var in $radii {
   .#{dv.$class-prefix}#{dv.$helpers-has-prefix}radius-#{$name} {
-    border-radius: cv.getVar($var);
+    border-radius: cv.get-var($var);
   }
 }

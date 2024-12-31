@@ -1,32 +1,32 @@
 @use "../utilities/css-variables.scss" as cv;
 @use "../utilities/mixins" as mx;
 
-$body-background-color: cv.getVar("scheme-main") !default;
+$body-background-color: cv.get-var("scheme-main") !default;
 $body-size: 1em !default;
 $body-min-width: 300px !default;
 $body-rendering: optimizeLegibility !default;
-$body-family: cv.getVar("family-primary") !default;
+$body-family: cv.get-var("family-primary") !default;
 $body-overflow-x: hidden !default;
 $body-overflow-y: scroll !default;
 
-$body-color: cv.getVar("text") !default;
+$body-color: cv.get-var("text") !default;
 $body-font-size: 1em !default;
-$body-weight: cv.getVar("weight-normal") !default;
+$body-weight: cv.get-var("weight-normal") !default;
 $body-line-height: 1.5 !default;
 
-$code-family: cv.getVar("family-code") !default;
+$code-family: cv.get-var("family-code") !default;
 $code-padding: 0.25em 0.5em 0.25em !default;
 $code-weight: normal !default;
 $code-size: 0.875em !default;
 
 $small-font-size: 0.875em !default;
 
-$hr-background-color: cv.getVar("background") !default;
+$hr-background-color: cv.get-var("background") !default;
 $hr-height: 2px !default;
 $hr-margin: 1.5rem 0 !default;
 
-$strong-color: cv.getVar("text-strong") !default;
-$strong-weight: cv.getVar("weight-semibold") !default;
+$strong-color: cv.get-var("text-strong") !default;
+$strong-weight: cv.get-var("weight-semibold") !default;
 
 $pre-font-size: 0.875em !default;
 $pre-padding: 1.25rem 1.5rem !default;
@@ -64,14 +64,14 @@ $pre-code-font-size: 1em !default;
 }
 
 html {
-  background-color: cv.getVar("body-background-color");
-  font-size: cv.getVar("body-size");
+  background-color: cv.get-var("body-background-color");
+  font-size: cv.get-var("body-size");
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  min-width: cv.getVar("body-min-width");
-  overflow-x: cv.getVar("body-overflow-x");
-  overflow-y: cv.getVar("body-overflow-y");
-  text-rendering: cv.getVar("body-rendering");
+  min-width: cv.get-var("body-min-width");
+  overflow-x: cv.get-var("body-overflow-x");
+  overflow-y: cv.get-var("body-overflow-y");
+  text-rendering: cv.get-var("body-rendering");
   text-size-adjust: 100%;
 }
 
@@ -91,21 +91,21 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: cv.getVar("body-family");
+  font-family: cv.get-var("body-family");
 }
 
 code,
 pre {
   -moz-osx-font-smoothing: auto;
   -webkit-font-smoothing: auto;
-  font-family: cv.getVar("code-family");
+  font-family: cv.get-var("code-family");
 }
 
 body {
-  color: cv.getVar("body-color");
-  font-size: cv.getVar("body-font-size");
-  font-weight: cv.getVar("body-weight");
-  line-height: cv.getVar("body-line-height");
+  color: cv.get-var("body-color");
+  font-size: cv.get-var("body-font-size");
+  font-weight: cv.get-var("body-weight");
+  line-height: cv.get-var("body-line-height");
 }
 
 // Inline
@@ -116,13 +116,13 @@ button {
 
   &:focus-visible {
     outline-color: hsl(
-      cv.getVar("focus-h"),
-      cv.getVar("focus-s"),
-      cv.getVar("focus-l")
+      cv.get-var("focus-h"),
+      cv.get-var("focus-s"),
+      cv.get-var("focus-l")
     );
-    outline-offset: cv.getVar("focus-offset");
-    outline-style: cv.getVar("focus-style");
-    outline-width: cv.getVar("focus-width");
+    outline-offset: cv.get-var("focus-offset");
+    outline-style: cv.get-var("focus-style");
+    outline-width: cv.get-var("focus-width");
 
     &:active {
       outline-width: 1px;
@@ -135,10 +135,10 @@ button {
 }
 
 a {
-  color: cv.getVar("link-text");
+  color: cv.get-var("link-text");
   cursor: pointer;
   text-decoration: none;
-  transition-duration: cv.getVar("duration");
+  transition-duration: cv.get-var("duration");
   transition-property: background-color, border-color, color;
 
   strong {
@@ -148,25 +148,25 @@ a {
 
 button {
   @include mx.reset;
-  transition-duration: cv.getVar("duration");
+  transition-duration: cv.get-var("duration");
   transition-property: background-color, border-color, color;
 }
 
 code {
-  background-color: cv.getVar("code-background");
+  background-color: cv.get-var("code-background");
   border-radius: 0.5em;
-  color: cv.getVar("code");
-  font-size: cv.getVar("code-size");
-  font-weight: cv.getVar("code-weight");
-  padding: cv.getVar("code-padding");
+  color: cv.get-var("code");
+  font-size: cv.get-var("code-size");
+  font-weight: cv.get-var("code-weight");
+  padding: cv.get-var("code-padding");
 }
 
 hr {
-  background-color: cv.getVar("hr-background-color");
+  background-color: cv.get-var("hr-background-color");
   border: none;
   display: block;
-  height: cv.getVar("hr-height");
-  margin: cv.getVar("hr-margin");
+  height: cv.get-var("hr-height");
+  margin: cv.get-var("hr-margin");
 }
 
 img {
@@ -180,7 +180,7 @@ input[type="radio"] {
 }
 
 small {
-  font-size: cv.getVar("small-font-size");
+  font-size: cv.get-var("small-font-size");
 }
 
 span {
@@ -189,8 +189,8 @@ span {
 }
 
 strong {
-  color: cv.getVar("strong-color");
-  font-weight: cv.getVar("strong-weight");
+  color: cv.get-var("strong-color");
+  font-weight: cv.get-var("strong-weight");
 }
 
 svg {
@@ -207,18 +207,18 @@ fieldset {
 pre {
   @include mx.overflow-touch;
 
-  background-color: cv.getVar("pre-background");
-  color: cv.getVar("pre");
-  font-size: cv.getVar("pre-font-size");
+  background-color: cv.get-var("pre-background");
+  color: cv.get-var("pre");
+  font-size: cv.get-var("pre-font-size");
   overflow-x: auto;
-  padding: cv.getVar("pre-padding");
+  padding: cv.get-var("pre-padding");
   white-space: pre;
   word-wrap: normal;
 
   code {
     background-color: transparent;
     color: currentColor;
-    font-size: cv.getVar("pre-code-font-size");
+    font-size: cv.get-var("pre-code-font-size");
     padding: 0;
   }
 }
@@ -234,6 +234,6 @@ table {
   }
 
   th {
-    color: cv.getVar("text-strong");
+    color: cv.get-var("text-strong");
   }
 }
