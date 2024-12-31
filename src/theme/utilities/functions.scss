@@ -82,32 +82,23 @@
 
 @function futraColorLuminance($color) {
   @if meta.type-of($color) != "color" {
-    @return 0.55;
+    @error "Expected a color, but got #{meta.type-of($color)}: #{$color}";
   }
 
-  $red: math.div(color.channel($color, "red", $space: rgb), 255);
-  $green: math.div(color.channel($color, "green", $space: rgb), 255);
-  $blue: math.div(color.channel($color, "blue", $space: rgb), 255);
-
-  // Apply luminance transformation
-  $red: if(
-    $red < 0.03928,
-    math.div($red, 12.92),
-    math.pow(math.div($red + 0.055, 1.055), 2.4)
-  );
-  $green: if(
-    $green < 0.03928,
-    math.div($green, 12.92),
-    math.pow(math.div($green + 0.055, 1.055), 2.4)
-  );
-  $blue: if(
-    $blue < 0.03928,
-    math.div($blue, 12.92),
-    math.pow(math.div($blue + 0.055, 1.055), 2.4)
+  $channels: (
+    "red": color.channel($color, "red", $space: rgb),
+    "green": color.channel($color, "green", $space: rgb),
+    "blue": color.channel($color, "blue", $space: rgb),
   );
 
-  // Return the relative luminance
-  @return $red * 0.2126 + $green * 0.7152 + $blue * 0.0722;
+  @each $key, $value in $channels {
+    $value: math.div($value, 255);
+    $channels: map.set($channels, $key, if($value < 0.03928, math.div($value, 12.92), math.pow(math.div($value + 0.055, 1.055), 2.4)));
+  }
+
+  @return map.get($channels, "red") * 0.2126 +
+         map.get($channels, "green") * 0.7152 +
+         map.get($channels, "blue") * 0.0722;
 }
 
 @function futraFindColorInvert($color) {
@@ -161,28 +152,14 @@
   @return $color;
 }
 
-@function futraColorBrightness($n) {
-  $brightness: math.round(
-    math.div(
-        color.channel($n, "red", $space: rgb) * 299 +
-          color.channel($n, "green", $space: rgb) * 587 +
-          color.channel($n, "blue", $space: rgb) * 114,
-        1000
-      )
-      or
-      calc(
-        (
-            color.channel($n, "red", $space: rgb) * 299 +
-              color.channel($n, "green", $space: rgb) * 587 +
-              color.channel($n, "blue", $space: rgb) * 114
-          ) / 1000
-      )
-  );
+/// Calculate contrast ratio between two colors
+@function futraColorContrast($foreground, $background) {
+  $l1: futraColorLuminance($foreground) + 0.05;
+  $l2: futraColorLuminance($background) + 0.05;
 
-  $threshold: math.div(255, 2); // Midpoint brightness
-
-  @return if($brightness < $threshold, "dark", "bright");
+  @return if($l1 > $l2, math.div($l1, $l2), math.div($l2, $l1));
 }
+
 
 @function futraEnoughContrast($foreground, $background) {
   $foreground-lum: futraColorLuminance($foreground) + 0.05;

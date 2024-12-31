@@ -39,6 +39,20 @@
   #{$varName}: #{$value};
 }
 
+@mixin register-color-variables($name, $base) {
+  // Register HSL channels
+  @each $channel in ("hue", "saturation", "lightness") {
+    @include register-var($name, math.round(color.channel($base, $channel, $space: hsl)), "", "-#{str-slice($channel, 1, 1)}");
+  }
+
+  // Register RGB channels
+  @include register-var($name, (
+    color.channel($base, "red", $space: rgb),
+    color.channel($base, "green", $space: rgb),
+    color.channel($base, "blue", $space: rgb),
+  ), "", "-rgb");
+}
+
 @mixin register-vars($vars, $prefix: "", $suffix: "") {
   @each $name, $value in $vars {
     @include register-var($name, $value, $prefix, $suffix);
@@ -93,34 +107,28 @@
   @include generate-on-scheme-colors($name, $base, $scheme-main-l);
 }
 
-
 @mixin generate-on-scheme-colors($name, $base, $scheme-main) {
-  $scheme-main-brightness: fn.futraColorBrightness($scheme-main);
-  $on-scheme-color: $base;
-
   @if fn.futraColorLuminance($base) > fn.futraColorLuminance($scheme-main) {
-    @include adjust-contrast($on-scheme-color, $scheme-main, "darken");
+    @include adjust-contrast($base, $scheme-main, "darken");
   } @else {
-    @include adjust-contrast($on-scheme-color, $scheme-main, "lighten");
+    @include adjust-contrast($base, $scheme-main, "lighten");
   }
 
-  @include register-var("#{$name}-on-scheme", $on-scheme-color);
+  @include register-color-variables("#{$name}-on-scheme", $base);
 }
 
+/// Adjust contrast for on-scheme colors
 @mixin adjust-contrast($foreground, $background, $direction) {
   $attempts: 0;
-  $max-attempts: 20;
+  $max-attempts: 10;
 
-  @while fn.futraEnoughContrast($foreground, $background) <
-    4.5 and
-    $attempts <
-    $max-attempts
-  {
-    $foreground: color.adjust(
-      $foreground,
-      $lightness: if($direction == "lighten", 5%, -5%)
-    );
+  @while fn.futraColorContrast($foreground, $background) < 4.5 and $attempts < $max-attempts {
+    $foreground: color.adjust($foreground, $lightness: if($direction == "lighten", 5%, -5%));
     $attempts: $attempts + 1;
+  }
+
+  @if $attempts == $max-attempts {
+    @warn "Failed to achieve sufficient contrast after #{$max-attempts} attempts.";
   }
 }
 
